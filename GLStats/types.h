@@ -36,7 +36,6 @@ using lunchbox::Strings;
 using lunchbox::StringsCIter;
 
 typedef std::deque< Item > Items;
-typedef Items::const_iterator ItemsCIter;
 }
 
 #endif //GLSTATS_TYPES_H

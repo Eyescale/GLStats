@@ -30,6 +30,7 @@ typedef stde::hash_map< uint32_t, Entity > EntityMap;
 typedef EntityMap::const_iterator EntityMapCIter;
 typedef stde::hash_map< uint32_t, Thread > ThreadMap;
 typedef ThreadMap::const_iterator ThreadMapCIter;
+typedef Items::const_iterator ItemsCIter;
 
 namespace detail
 {

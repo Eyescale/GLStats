@@ -49,6 +49,7 @@ typedef stde::hash_map< uint32_t, uint32_t > EntityPos;
 
 typedef std::set< uint32_t > LayerSet;
 typedef LayerSet::const_iterator LayerSetCIter;
+typedef Items::const_iterator ItemsCIter;
 
 namespace detail
 {
