@@ -28,8 +28,9 @@ find_package(OpenGL REQUIRED)
 include(Common)
 include(DoxygenSetup)
 include(UpdateFile)
+include(InstallSymlink)
 
-#add_subdirectory(GLStats)
+add_subdirectory(GLStats)
 #add_subdirectory(tests)
 
 include(DoxygenRule) # must be after all targets
