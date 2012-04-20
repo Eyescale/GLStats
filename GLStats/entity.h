@@ -1,4 +1,4 @@
- 
+
 /* Copyright (c) 2012, Stefan Eilemann <eile@eyescale.ch> 
  *
  * This library is free software; you can redistribute it and/or modify it under
@@ -15,24 +15,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-/** Defines export visibility macros for GLStats. */
-#ifndef GLSTATS_API_H
-#define GLSTATS_API_H
+#ifndef GLSTATS_ENTITY_H
+#define GLSTATS_ENTITY_H
 
-#if defined(_MSC_VER) || defined(__declspec)
-#  define GLSTATS_DLLEXPORT __declspec(dllexport)
-#  define GLSTATS_DLLIMPORT __declspec(dllimport)
-#else // _MSC_VER
-#  define GLSTATS_DLLEXPORT
-#  define GLSTATS_DLLIMPORT
-#endif // _MSC_VER
+#include <GLStats/api.h>
 
-#if defined(GLSTATS_STATIC)
-#  define GLSTATS_API
-#elif defined(GLSTATS_SHARED)
-#  define GLSTATS_API GLSTATS_DLLEXPORT
-#else
-#  define GLSTATS_API GLSTATS_DLLIMPORT
-#endif
+namespace GLStats
+{
+    /** One statistics entity. */
+    struct Entity
+    {
+        Entity() : identifier( 0 ) {}
 
-#endif //GLSTATS_API_H
+        uint32_t identifier; //!< Entity identifier used in item
+        std::string name; //!< Name printed in statistics
+    };
+}
+
+#endif //GLSTATS_ENTITY_H

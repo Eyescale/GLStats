@@ -1,4 +1,4 @@
- 
+
 /* Copyright (c) 2012, Stefan Eilemann <eile@eyescale.ch> 
  *
  * This library is free software; you can redistribute it and/or modify it under
@@ -15,24 +15,26 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-/** Defines export visibility macros for GLStats. */
-#ifndef GLSTATS_API_H
-#define GLSTATS_API_H
+#ifndef GLSTATS_ITEM_H
+#define GLSTATS_ITEM_H
 
-#if defined(_MSC_VER) || defined(__declspec)
-#  define GLSTATS_DLLEXPORT __declspec(dllexport)
-#  define GLSTATS_DLLIMPORT __declspec(dllimport)
-#else // _MSC_VER
-#  define GLSTATS_DLLEXPORT
-#  define GLSTATS_DLLIMPORT
-#endif // _MSC_VER
+#include <GLStats/api.h>
 
-#if defined(GLSTATS_STATIC)
-#  define GLSTATS_API
-#elif defined(GLSTATS_SHARED)
-#  define GLSTATS_API GLSTATS_DLLEXPORT
-#else
-#  define GLSTATS_API GLSTATS_DLLIMPORT
-#endif
+namespace GLStats
+{
+    /** One statistics item. */
+    struct Item
+    {
+        Item() : start( -1 ), end( -1 ), order( 0 ), entity( 0 ), thread( 0 )
+               , frame( 0 ) {}
 
-#endif //GLSTATS_API_H
+        int64_t start;  //!< Beginning of the event
+        int64_t end;    //!< End of the event
+        uint32_t order; //!< Depth of a (sub-)event
+        uint32_t entity; //!< Identifier of the reporting entity
+        uint32_t thread; //!< Identifier of the reporting thread
+        uint32_t frame; //!< The rendering frame number
+    };
+}
+
+#endif //GLSTATS_ITEM_H

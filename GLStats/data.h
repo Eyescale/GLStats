@@ -1,4 +1,4 @@
- 
+
 /* Copyright (c) 2012, Stefan Eilemann <eile@eyescale.ch> 
  *
  * This library is free software; you can redistribute it and/or modify it under
@@ -15,24 +15,23 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-/** Defines export visibility macros for GLStats. */
-#ifndef GLSTATS_API_H
-#define GLSTATS_API_H
+#ifndef GLSTATS_DATA_H
+#define GLSTATS_DATA_H
 
-#if defined(_MSC_VER) || defined(__declspec)
-#  define GLSTATS_DLLEXPORT __declspec(dllexport)
-#  define GLSTATS_DLLIMPORT __declspec(dllimport)
-#else // _MSC_VER
-#  define GLSTATS_DLLEXPORT
-#  define GLSTATS_DLLIMPORT
-#endif // _MSC_VER
+#include <GLStats/api.h>
 
-#if defined(GLSTATS_STATIC)
-#  define GLSTATS_API
-#elif defined(GLSTATS_SHARED)
-#  define GLSTATS_API GLSTATS_DLLEXPORT
-#else
-#  define GLSTATS_API GLSTATS_DLLIMPORT
-#endif
+namespace GLStats
+{
+    /** The data storage. */
+    class Data
+    {
+    public:
+        /** Construct a new data storage. */
+        GLSTATS_API Data();
+        GLSTATS_API void addEntity( const Entity& entity );
+        GLSTATS_API void addThread( const Thread& thread );
+        GLSTATS_API void addItem( const Item& item );
+    };
+}
 
-#endif //GLSTATS_API_H
+#endif //GLSTATS_DATA_H
