@@ -23,12 +23,16 @@ else()
   set(VERSION_ABI ${VERSION_MINOR}${VERSION_PATCH})
 endif()
 
-find_package(OpenGL REQUIRED)
-
 include(Common)
 include(DoxygenSetup)
 include(UpdateFile)
 include(InstallSymlink)
+
+find_package(OpenGL REQUIRED)
+find_package(Lunchbox 0.9 REQUIRED)
+
+link_directories(${LUNCHBOX_LIBRARY_DIRS})
+include_directories(${LUNCHBOX_INCLUDE_DIRS})
 
 add_subdirectory(GLStats)
 #add_subdirectory(tests)

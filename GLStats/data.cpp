@@ -15,35 +15,50 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GLSTATS_DATA_H
-#define GLSTATS_DATA_H
+#include "data.h"
 
-#include <GLStats/api.h>
-#include <GLStats/types.h>
+#include "entity.h"
+#include "thread.h"
+
+#include <lunchbox/stdExt.h>
 
 namespace GLStats
 {
-namespace detail { class Data; }
+typedef stde::hash_map< uint32_t, Entity > EntityMap;
+typedef stde::hash_map< uint32_t, Thread > ThreadMap;
 
-    /** The data storage. */
-    class Data
-    {
-    public:
-        /** Construct a new data storage. */
-        GLSTATS_API Data();
-
-        /** Destruct this data storage. */
-        GLSTATS_API virtual ~Data();
-
-        GLSTATS_API void addEntity( const uint32_t identifier,
-                                    const Entity& entity );
-        GLSTATS_API void addThread( const uint32_t identifier,
-                                    const Thread& thread );
-        GLSTATS_API void addItem( const Item& item );
-
-    private:
-        detail::Data* const impl_;
-    };
+namespace detail
+{
+class Data
+{
+public:
+    EntityMap entities;
+    ThreadMap threads;
+};
 }
 
-#endif //GLSTATS_DATA_H
+Data::Data()
+        : impl_( new detail::Data )
+{}
+
+Data::~Data()
+{
+    delete impl_;
+}
+
+void Data::addEntity( const uint32_t identifier, const Entity& entity )
+{
+    impl_->entities[ identifier ] = entity;
+}
+
+void Data::addThread( const uint32_t identifier, const Thread& thread )
+{
+    impl_->threads[ identifier ] = thread;
+}
+
+void Data::addItem( const Item& item )
+{
+    
+}
+
+}

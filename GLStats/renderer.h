@@ -49,7 +49,7 @@ namespace detail { class GLStats; }
         GLSTATS_API void draw( Data& data );
 
     private:
-        detail::GLStats* const _impl;
+        detail::GLStats* const impl_;
     };
 }
 

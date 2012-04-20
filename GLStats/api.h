@@ -19,20 +19,14 @@
 #ifndef GLSTATS_API_H
 #define GLSTATS_API_H
 
-#if defined(_MSC_VER) || defined(__declspec)
-#  define GLSTATS_DLLEXPORT __declspec(dllexport)
-#  define GLSTATS_DLLIMPORT __declspec(dllimport)
-#else // _MSC_VER
-#  define GLSTATS_DLLEXPORT
-#  define GLSTATS_DLLIMPORT
-#endif // _MSC_VER
+#include <lunchbox/api.h>
 
 #if defined(GLSTATS_STATIC)
 #  define GLSTATS_API
 #elif defined(GLSTATS_SHARED)
-#  define GLSTATS_API GLSTATS_DLLEXPORT
+#  define GLSTATS_API LB_DLLEXPORT
 #else
-#  define GLSTATS_API GLSTATS_DLLIMPORT
+#  define GLSTATS_API LB_DLLIMPORT
 #endif
 
 #endif //GLSTATS_API_H

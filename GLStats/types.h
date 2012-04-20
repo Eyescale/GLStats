@@ -20,6 +20,8 @@
 #ifndef GLSTATS_TYPES_H
 #define GLSTATS_TYPES_H
 
+#include <lunchbox/types.h>
+
 namespace GLStats
 {
 class Data;

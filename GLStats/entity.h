@@ -25,9 +25,8 @@ namespace GLStats
     /** One statistics entity. */
     struct Entity
     {
-        Entity() : identifier( 0 ) {}
+        Entity() {}
 
-        uint32_t identifier; //!< Entity identifier used in item
         std::string name; //!< Name printed in statistics
     };
 }
