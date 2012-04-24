@@ -35,11 +35,22 @@ namespace detail { class Data; }
         /** Destruct this data storage. */
         GLSTATS_API virtual ~Data();
 
+        /** Add an entity description. */
         GLSTATS_API void addEntity( const uint32_t identifier,
                                     const Entity& entity );
+
+        /** Add a thread description. */
         GLSTATS_API void addThread( const uint32_t identifier,
                                     const Thread& thread );
+
+        /** Add a statistics item. */
         GLSTATS_API void addItem( const Item& item );
+
+        /** @return the vector of items for the frame of the given age. */
+        GLSTATS_API const Items& getItems() const;
+
+        /** @return the min and max time for the last n frames. */
+        GLSTATS_API uint128_t computeMinMax( const uint32_t nFrames );
 
     private:
         detail::Data* const impl_;

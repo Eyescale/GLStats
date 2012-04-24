@@ -32,7 +32,7 @@ find_package(OpenGL REQUIRED)
 find_package(Lunchbox 0.9 REQUIRED)
 
 link_directories(${LUNCHBOX_LIBRARY_DIRS})
-include_directories(${LUNCHBOX_INCLUDE_DIRS})
+include_directories(${LUNCHBOX_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
 
 add_subdirectory(GLStats)
 #add_subdirectory(tests)

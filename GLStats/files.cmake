@@ -18,6 +18,7 @@ set(GLSTATS_PUBLIC_HEADERS
 
 set(GLSTATS_SOURCES
   data.cpp
+  renderer.cpp
   version.cpp
   )
 

@@ -19,10 +19,11 @@
 #define GLSTATS_RENDERER_H
 
 #include <GLStats/api.h>
+#include <GLStats/types.h>
 
 namespace GLStats
 {
-namespace detail { class GLStats; }
+namespace detail { class Renderer; }
 
     /** The default renderer. */
     class Renderer
@@ -35,7 +36,8 @@ namespace detail { class GLStats; }
         GLSTATS_API virtual ~Renderer();
 
         /** Set the size of the rendering area in pixels. */
-        GLSTATS_API void setViewportSize( const uint32_t size[2] );
+        GLSTATS_API void setViewport( const uint32_t width,
+                                      const uint32_t height );
 
         /** Remove unneeded items from the data set. */
         GLSTATS_API void obsolete( Data& data );
@@ -49,7 +51,7 @@ namespace detail { class GLStats; }
         GLSTATS_API void draw( Data& data );
 
     private:
-        detail::GLStats* const impl_;
+        detail::Renderer* const impl_;
     };
 }
 

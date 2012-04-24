@@ -29,6 +29,11 @@ class Renderer;
 struct Entity;
 struct Item;
 struct Thread;
+
+using lunchbox::uint128_t;
+
+typedef std::vector< Item > Items;
+typedef Items::const_iterator ItemsCIter;
 }
 
 #endif //GLSTATS_TYPES_H
