@@ -130,6 +130,8 @@ public:
                 if( item.frame < startFrame )
                     break;
             }
+            else if( item.entity != last->entity )
+                inset = 0;
             else if( item.layer != last->layer )
                 inset += space;
 
@@ -148,7 +150,7 @@ public:
 
             float y1 = static_cast< float >( y - inset );
             float y2 = static_cast< float >( y - barHeight + inset );
-            LBASSERT( y1 < y2 );
+            LBASSERTINFO( y2 < y1, y2 << " >= " << y1 );
 
             glColor3fv( item.color );
             glBegin( GL_QUADS ); {
