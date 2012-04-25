@@ -19,7 +19,7 @@
 #define GLSTATS_VERSION_H
 
 #include <GLStats/api.h>
-//#include <GLStats/types.h>
+#include <GLStats/types.h>
 #include <string>
 
 namespace GLStats
