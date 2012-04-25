@@ -23,6 +23,7 @@
 #include "thread.h"
 
 #include <lunchbox/debug.h>
+#include <lunchbox/os.h>
 #include <lunchbox/stdExt.h>
 #include <map>
 #include <set>

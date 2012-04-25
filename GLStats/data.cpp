@@ -22,6 +22,7 @@
 #include "thread.h"
 
 #include <lunchbox/stdExt.h>
+#include <limits>
 
 namespace GLStats
 {
