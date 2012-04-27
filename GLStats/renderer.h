@@ -50,6 +50,9 @@ namespace detail { class Renderer; }
          */
         GLSTATS_API void draw( Data& data );
 
+    protected:
+        virtual void drawText( const std::string& text ) = 0;
+
     private:
         detail::Renderer* const impl_;
     };

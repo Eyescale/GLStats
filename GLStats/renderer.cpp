@@ -25,6 +25,7 @@
 #include <lunchbox/debug.h>
 #include <lunchbox/os.h>
 #include <lunchbox/stdExt.h>
+
 #include <map>
 #include <set>
 #ifdef __APPLE__
@@ -37,7 +38,8 @@ namespace GLStats
 {
 static const uint32_t nFrames = 3;
 static const uint32_t space = 2; // pixel
-static const uint32_t barHeight = 12; // pixel
+static const uint32_t gap = space<<1; // pixel
+static const uint32_t barHeight = 10; // pixel
 
 typedef std::set< uint32_t > ThreadSet;
 typedef ThreadSet::const_iterator ThreadSetCIter;
@@ -62,15 +64,15 @@ public:
             return;
 
         // Scale factor
-        uint128_t x = data.computeMinMax( nFrames );
+        const uint128_t x = data.computeMinMax( nFrames );
         const uint64_t time = x.high() - x.low();
-        uint32_t scale = 1;
+        float scale = 1;
 
+        while( time / scale < width )
+            scale *= .5f;
         while( time / scale > width )
-            scale = scale << 1;
-
-        x.high() /= scale;
-        x.low() = x.high() - width + space;
+            scale *= 2.f;
+        const uint64_t xOffset = x.low() - width * scale + time;
 
         // y positions
         EntityMap entities;
@@ -87,70 +89,109 @@ public:
             threads.insert( item.thread );
         }
 
-        uint32_t nextY = height - space; // start at top
+        uint32_t nextY = height - gap; // start at top
         EntityPos yPos;
         for( EntityMapCIter i = entities.begin(); i != entities.end(); ++i )
         {
             const ThreadSet& threads = i->second;
             yPos[ i->first ] = nextY;
-            nextY -= threads.size() * (barHeight + space);
+            nextY -= threads.size() * (barHeight + gap);
         }
 
-        //----- statistics
-        float dim = 0.0f;
-        uint32_t inset = 0;
-
+        //----- alternating frame background
         const Item* last = &items.front();
-        uint128_t frameTime( x.high(), 0 );
+        typedef std::pair< uint32_t, uint64_t > FrameStart;
+        typedef std::vector< FrameStart > FrameStarts;
+        typedef stde::hash_map< uint64_t, FrameStarts > FrameStartsMap;
+        typedef FrameStarts::const_iterator FrameStartsCIter;
+        typedef FrameStartsMap::const_iterator FrameStartsMapCIter;
+
+        FrameStartsMap frameStarts;
+        uint64_t startTime = last->start;
+
         for( ItemsCIter i = items.begin(); i != items.end(); ++i )
         {
             const Item& item = *i;
-            if( item.frame != last->frame )
+            if( item.frame < startFrame )
+                continue;
+
+            if( item.entity != last->entity || item.thread != last->thread ||
+                item.frame != last->frame )
             {
-                frameTime.low() -= x.low();
-                frameTime.high() -= x.low();
-
-                const float x1 = static_cast< float >( frameTime.low( ));
-                const float x2 = static_cast< float >( frameTime.high( ));
-                const float y1 = static_cast< float >( nextY );
-                const float y2 = static_cast< float >( height );
-
-                glBegin( GL_LINES ); {
-                    glColor3f( .5f-dim, 1.0f-dim, .5f-dim );
-                    glVertex3f( x1, y1, 0.3f );
-                    glVertex3f( x1, y2, 0.3f );
-
-                    glColor3f( .5f-dim, .5f-dim, .5f-dim );
-                    glVertex3f( x2, y1, 0.3f );
-                    glVertex3f( x2, y2, 0.3f );
-                } glEnd();
-
-                dim += .1f;
-                inset = 0;
-                frameTime = uint128_t( x.high(), 0 );
-                if( item.frame < startFrame )
-                    break;
+                const uint64_t row = ( uint64_t( last->entity ) << 32 ) +
+                                     last->thread;
+                FrameStarts& starts = frameStarts[ row ];
+                starts.push_back( std::make_pair( last->frame, startTime ));
+                startTime = item.start;
             }
-            else if( item.entity != last->entity )
+ 
+            startTime = LB_MIN( item.start, startTime );
+            last = &item;
+        }
+
+        for( FrameStartsMapCIter i = frameStarts.begin();
+             i != frameStarts.end(); ++i )
+        {
+            const uint64_t row = i->first;
+            const uint32_t entity = row >> 32;
+            const uint32_t thread = row & 0xFFFFFFFFu;
+            const FrameStarts& starts = i->second;
+
+            for( FrameStartsCIter j = starts.begin(); j != starts.end(); )
+            {
+                const uint32_t frame = j->first;
+                const uint64_t start = j->second;
+                ++j;
+                const uint64_t end = (j==starts.end( )) ? x.high() : j->second;
+
+                const ThreadSet& threads = entities[ entity ];
+                const ThreadSetCIter k = threads.find( thread );
+                const uint32_t y = yPos[ entity ] - 
+                    std::distance( threads.begin(), k ) * (barHeight + gap);
+
+                const float x1 = float(start - xOffset) / scale - gap;
+                const float x2 = float(end - xOffset) / scale - gap;
+                const float y1 = float( y + space );
+                const float y2 = float( y - barHeight -space );
+     
+                if( (endFrame - frame) & 0x1 )
+                    glColor3f( .4f, .4f, .4f );
+                else
+                    glColor3f( .6f, .6f, .6f );
+                glBegin( GL_QUADS ); {
+                    glVertex3f( x2, y1, 0.f );
+                    glVertex3f( x1, y1, 0.f );
+                    glVertex3f( x1, y2, 0.f);
+                    glVertex3f( x2, y2, 0.f );
+                } glEnd();
+            }
+        }
+
+#if 1
+        //----- statistics
+        uint32_t inset = 0;
+
+        last = &items.front();
+        for( ItemsCIter i = items.begin(); i != items.end(); ++i )
+        {
+            const Item& item = *i;
+            if( item.frame < startFrame )
+                continue;
+
+            if( item.frame != last->frame || item.entity != last->entity )
                 inset = 0;
             else if( item.layer != last->layer )
                 inset += space;
 
-            const uint64_t startTime = item.start / scale;
-            const uint64_t endTime   = item.end   / scale;
-            const float x1 = static_cast< float >( startTime - x.low( ));
-            const float x2 = static_cast< float >( endTime   - x.low( ));
-
-            frameTime.low() = LB_MIN( frameTime.low(), startTime );
-            frameTime.high() = LB_MAX( frameTime.high(), endTime   );
-
             const ThreadSet& threads = entities[ item.entity ];
             const ThreadSetCIter j = threads.find( item.thread );
             const uint32_t y = yPos[ item.entity ] - 
-                std::distance( threads.begin(), j ) * (barHeight + space);
+                std::distance( threads.begin(), j ) * (barHeight + gap);
 
-            float y1 = static_cast< float >( y - inset );
-            float y2 = static_cast< float >( y - barHeight + inset );
+            const float x1 = float( item.start - xOffset ) / scale - gap;
+            const float x2 = float( item.end   - xOffset ) / scale - gap;
+            const float y1 = float( y - inset );
+            const float y2 = float( y - barHeight + inset );
             LBASSERTINFO( y2 < y1, y2 << " >= " << y1 );
 
             glColor3fv( item.color );
@@ -171,8 +212,8 @@ public:
 #endif
             last = &item;
         }
+#endif
     }
-
 #if 0
     glLogicOp( GL_XOR );
     glEnable( GL_COLOR_LOGIC_OP );
@@ -223,7 +264,7 @@ public:
     //----- Global stats (scale, GPU idle)
     glColor3f( 1.f, 1.f, 1.f );
     nextY -= (barHeight + space);
-    glRasterPos3f( 60.f, static_cast< float >( nextY ), 0.99f );
+    glRasterPos3f( 60.f, float( nextY ), 0.99f );
     std::ostringstream text;
     text << scale << "ms/pixel";
 
@@ -298,8 +339,8 @@ public:
 
         x += 60.f;
         const float x2 = x + 60.f - space; 
-        const float y1 = static_cast< float >( nextY );
-        const float y2 = static_cast< float >( nextY - barHeight );
+        const float y1 = float( nextY );
+        const float y2 = float( nextY - barHeight );
 
         glColor3fv( Statistic::getColor( type ).array );
         glBegin( GL_QUADS );
