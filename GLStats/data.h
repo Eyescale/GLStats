@@ -39,9 +39,15 @@ namespace detail { class Data; }
         GLSTATS_API void addEntity( const uint32_t identifier,
                                     const Entity& entity );
 
+        /** @return the entity description for the given id. */
+        const Entity& getEntity( const uint32_t identifier );
+
         /** Add a thread description. */
         GLSTATS_API void addThread( const uint32_t identifier,
                                     const Thread& thread );
+
+        /** @return the thread description for the given id. */
+        const Thread& getThread( const uint32_t identifier );
 
         /** Add a statistics item. */
         GLSTATS_API void addItem( const Item& item );

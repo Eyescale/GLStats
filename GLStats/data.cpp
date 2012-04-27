@@ -27,10 +27,14 @@
 namespace GLStats
 {
 typedef stde::hash_map< uint32_t, Entity > EntityMap;
+typedef EntityMap::const_iterator EntityMapCIter;
 typedef stde::hash_map< uint32_t, Thread > ThreadMap;
+typedef ThreadMap::const_iterator ThreadMapCIter;
 
 namespace detail
 {
+Entity nullEntity_;
+Thread nullThread_;
 
 static bool _compare( const Item& i1, const Item& i2 )
 {
@@ -90,9 +94,25 @@ void Data::addEntity( const uint32_t identifier, const Entity& entity )
     impl_->entities[ identifier ] = entity;
 }
 
+const Entity& Data::getEntity( const uint32_t identifier )
+{
+    const EntityMapCIter i = impl_->entities.find( identifier );
+    if( i == impl_->entities.end( ))
+        return detail::nullEntity_;
+    return i->second;
+}
+
 void Data::addThread( const uint32_t identifier, const Thread& thread )
 {
     impl_->threads[ identifier ] = thread;
+}
+
+const Thread& Data::getThread( const uint32_t identifier )
+{
+    const ThreadMapCIter i = impl_->threads.find( identifier );
+    if( i == impl_->threads.end( ))
+        return detail::nullThread_;
+    return i->second;
 }
 
 void Data::addItem( const Item& item )

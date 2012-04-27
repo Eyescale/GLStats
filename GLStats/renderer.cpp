@@ -55,7 +55,7 @@ namespace detail
 class Renderer
 {
 public:
-    Renderer() : width( 0 ), height( 0 ) {}
+    Renderer() : api( 0 ), width( 0 ), height( 0 ) {}
 
     void draw( ::GLStats::Data& data )
     {
@@ -66,7 +66,7 @@ public:
         // Scale factor
         const uint128_t x = data.computeMinMax( nFrames );
         const uint64_t time = x.high() - x.low();
-        float scale = 1;
+        float scale = 1.f;
 
         while( time / scale < width )
             scale *= .5f;
@@ -98,7 +98,7 @@ public:
             nextY -= threads.size() * (barHeight + gap);
         }
 
-        //----- alternating frame background
+        //----- alternating frame background, entity names
         const Item* last = &items.front();
         typedef std::pair< uint32_t, uint64_t > FrameStart;
         typedef std::vector< FrameStart > FrameStarts;
@@ -136,6 +136,12 @@ public:
             const uint32_t entity = row >> 32;
             const uint32_t thread = row & 0xFFFFFFFFu;
             const FrameStarts& starts = i->second;
+            const ThreadSet& threads = entities[ entity ];
+            const ThreadSetCIter threadPos = threads.find( thread );
+            const uint32_t y = yPos[ entity ] -
+                std::distance( threads.begin(), threadPos ) * (barHeight + gap);
+            const float y1 = float( y + space );
+            const float y2 = float( y - barHeight -space );
 
             for( FrameStartsCIter j = starts.begin(); j != starts.end(); )
             {
@@ -144,15 +150,8 @@ public:
                 ++j;
                 const uint64_t end = (j==starts.end( )) ? x.high() : j->second;
 
-                const ThreadSet& threads = entities[ entity ];
-                const ThreadSetCIter k = threads.find( thread );
-                const uint32_t y = yPos[ entity ] - 
-                    std::distance( threads.begin(), k ) * (barHeight + gap);
-
                 const float x1 = float(start - xOffset) / scale - gap;
                 const float x2 = float(end - xOffset) / scale - gap;
-                const float y1 = float( y + space );
-                const float y2 = float( y - barHeight -space );
      
                 if( (endFrame - frame) & 0x1 )
                     glColor3f( .4f, .4f, .4f );
@@ -164,6 +163,21 @@ public:
                     glVertex3f( x1, y2, 0.f);
                     glVertex3f( x2, y2, 0.f );
                 } glEnd();
+            }
+
+            if( thread == 0 )
+            {
+                const Entity& entityData = data.getEntity( entity );
+                glColor3f( 1.f, 1.f, 1.f );
+                glRasterPos3f( space, y2, 0.f );
+                api->drawText( entityData.name );
+            }
+            else
+            {
+                const Thread& threadData = data.getThread( thread );
+                glColor3f( 1.f, 1.f, 1.f );
+                glRasterPos3f( space + barHeight, y2, 0.f );
+                api->drawText( threadData.name );
             }
         }
 
@@ -360,6 +374,7 @@ public:
     EQ_GL_CALL( resetAssemblyState( ));
 #endif
 
+    GLStats::Renderer* api;
     uint32_t width;
     uint32_t height;
 };
@@ -367,7 +382,9 @@ public:
 
 Renderer::Renderer()
         : impl_( new detail::Renderer )
-{}
+{
+    impl_->api = this;
+}
 
 Renderer::~Renderer()
 {

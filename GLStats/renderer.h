@@ -55,6 +55,7 @@ namespace detail { class Renderer; }
 
     private:
         detail::Renderer* const impl_;
+        friend class detail::Renderer;
     };
 }
 
