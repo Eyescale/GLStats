@@ -58,6 +58,15 @@ namespace detail { class Data; }
         /** @return the min and max time for the last n frames. */
         GLSTATS_API uint128_t computeMinMax( const uint32_t nFrames );
 
+        /** Add additional text at the bottom. */
+        GLSTATS_API void addText( const std::string& text );
+
+        /** Remove all additional text. */
+        GLSTATS_API void clearText();
+
+        /** @return all additional text. */
+        GLSTATS_API const Strings& getText() const;
+
     private:
         detail::Data* const impl_;
     };

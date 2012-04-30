@@ -77,6 +77,7 @@ public:
     EntityMap entities;
     ThreadMap threads;
     Items items;
+    Strings text;
 };
 }
 
@@ -128,6 +129,21 @@ const Items& Data::getItems() const
 uint128_t Data::computeMinMax( const uint32_t nFrames )
 {
     return impl_->computeMinMax( nFrames );
+}
+
+void Data::addText( const std::string& text )
+{
+    impl_->text.push_back( text );
+}
+
+void Data::clearText()
+{
+    impl_->text.clear();
+}
+
+const Strings& Data::getText() const
+{
+    return impl_->text;
 }
 
 }

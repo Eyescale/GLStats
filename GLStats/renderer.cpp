@@ -65,14 +65,14 @@ public:
 
         // Scale factor
         const uint128_t x = data.computeMinMax( nFrames );
-        const uint64_t time = x.high() - x.low();
+        const uint64_t totalTime = x.high() - x.low();
         float scale = 1.f;
 
-        while( time / scale < width )
+        while( totalTime / scale < width )
             scale *= .5f;
-        while( time / scale > width )
+        while( totalTime / scale > width )
             scale *= 2.f;
-        const uint64_t xOffset = x.low() - width * scale + time;
+        const uint64_t xOffset = x.low() - width * scale + totalTime;
 
         // y positions
         EntityMap entities;
@@ -100,14 +100,15 @@ public:
 
         //----- alternating frame background, entity names
         const Item* last = &items.front();
-        typedef std::pair< uint32_t, uint64_t > FrameStart;
-        typedef std::vector< FrameStart > FrameStarts;
-        typedef stde::hash_map< uint64_t, FrameStarts > FrameStartsMap;
-        typedef FrameStarts::const_iterator FrameStartsCIter;
-        typedef FrameStartsMap::const_iterator FrameStartsMapCIter;
+        typedef std::pair< uint32_t, uint128_t > FrameTime;
+        typedef std::vector< FrameTime > FrameTimes;
+        typedef stde::hash_map< uint64_t, FrameTimes > FrameTimesMap;
+        typedef FrameTimes::const_iterator FrameTimesCIter;
+        typedef FrameTimesMap::const_iterator FrameTimesMapCIter;
 
-        FrameStartsMap frameStarts;
+        FrameTimesMap frameTimes;
         uint64_t startTime = last->start;
+        uint64_t endTime = 0;
 
         for( ItemsCIter i = items.begin(); i != items.end(); ++i )
         {
@@ -120,22 +121,26 @@ public:
             {
                 const uint64_t row = ( uint64_t( last->entity ) << 32 ) +
                                      last->thread;
-                FrameStarts& starts = frameStarts[ row ];
-                starts.push_back( std::make_pair( last->frame, startTime ));
+                FrameTimes& times = frameTimes[ row ];
+                const uint128_t time( endTime, startTime );
+                times.push_back( std::make_pair( last->frame, time ));
+
                 startTime = item.start;
+                endTime = item.end;
             }
  
             startTime = LB_MIN( item.start, startTime );
+            endTime = LB_MAX( item.end, endTime );
             last = &item;
         }
 
-        for( FrameStartsMapCIter i = frameStarts.begin();
-             i != frameStarts.end(); ++i )
+        for( FrameTimesMapCIter i = frameTimes.begin();
+             i != frameTimes.end(); ++i )
         {
             const uint64_t row = i->first;
             const uint32_t entity = row >> 32;
             const uint32_t thread = row & 0xFFFFFFFFu;
-            const FrameStarts& starts = i->second;
+            const FrameTimes& times = i->second;
             const ThreadSet& threads = entities[ entity ];
             const ThreadSetCIter threadPos = threads.find( thread );
             const uint32_t y = yPos[ entity ] -
@@ -143,20 +148,19 @@ public:
             const float y1 = float( y + space );
             const float y2 = float( y - barHeight -space );
 
-            for( FrameStartsCIter j = starts.begin(); j != starts.end(); )
+            for( FrameTimesCIter j = times.begin(); j != times.end(); ++j )
             {
                 const uint32_t frame = j->first;
-                const uint64_t start = j->second;
-                ++j;
-                const uint64_t end = (j==starts.end( )) ? x.high() : j->second;
+                const uint64_t start = j->second.low();
+                const uint64_t end = j->second.high();
 
                 const float x1 = float(start - xOffset) / scale - gap;
                 const float x2 = float(end - xOffset) / scale - gap;
      
                 if( (endFrame - frame) & 0x1 )
-                    glColor3f( .4f, .4f, .4f );
+                    glColor4f( .4f, .4f, .4f, .6f );
                 else
-                    glColor3f( .6f, .6f, .6f );
+                    glColor4f( .6f, .6f, .6f, .6f );
                 glBegin( GL_QUADS ); {
                     glVertex3f( x2, y1, 0.f );
                     glVertex3f( x1, y1, 0.f );
@@ -181,7 +185,6 @@ public:
             }
         }
 
-#if 1
         //----- statistics
         uint32_t inset = 0;
 
@@ -208,7 +211,7 @@ public:
             const float y2 = float( y - barHeight + inset );
             LBASSERTINFO( y2 < y1, y2 << " >= " << y1 );
 
-            glColor3fv( item.color );
+            glColor4fv( item.color );
             glBegin( GL_QUADS ); {
                 glVertex3f( x2, y1, 0.f );
                 glVertex3f( x1, y1, 0.f );
@@ -216,21 +219,22 @@ public:
                 glVertex3f( x2, y2, 0.f );
             } glEnd();
 
-#if 0
-            if( !text.str().empty( ))
-            {
-                glColor3f( 1.f, 1.f, 1.f );
-                glRasterPos3f( x1+1, y2, 0.f );
-                font->draw( text.str( ));
-            }
-#endif
             last = &item;
         }
-#endif
+
+        glLogicOp( GL_XOR );
+        glEnable( GL_COLOR_LOGIC_OP );
+
+        nextY -= (barHeight + gap);
+        glRasterPos3f( space, static_cast< float >( nextY ), 0.f );
+        glColor4f( 1.f, 1.f, 1.f, 1.f );
+
+        const Strings& text = data.getText();
+        for( StringsCIter i = text.begin(); i != text.end(); ++i )
+            api->drawText( *i );     
     }
+
 #if 0
-    glLogicOp( GL_XOR );
-    glEnable( GL_COLOR_LOGIC_OP );
 
     //----- Entitity names
     for( std::map< uint32_t, EntityData >::const_iterator i = entities.begin();

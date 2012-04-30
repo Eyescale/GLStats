@@ -31,6 +31,8 @@ struct Item;
 struct Thread;
 
 using lunchbox::uint128_t;
+using lunchbox::Strings;
+using lunchbox::StringsCIter;
 
 typedef std::vector< Item > Items;
 typedef Items::const_iterator ItemsCIter;

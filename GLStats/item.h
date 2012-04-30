@@ -31,7 +31,7 @@ namespace GLStats
                 color[0] = 1.f;
                 color[1] = 1.f;
                 color[2] = 1.f; 
-                color[2] = 1.f;
+                color[3] = .6f;
            }
 
         uint64_t start;   //!< Beginning of the event
