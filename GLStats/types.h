@@ -21,6 +21,7 @@
 #define GLSTATS_TYPES_H
 
 #include <lunchbox/types.h>
+#include <deque>
 
 namespace GLStats
 {
@@ -34,7 +35,7 @@ using lunchbox::uint128_t;
 using lunchbox::Strings;
 using lunchbox::StringsCIter;
 
-typedef std::vector< Item > Items;
+typedef std::deque< Item > Items;
 typedef Items::const_iterator ItemsCIter;
 }
 

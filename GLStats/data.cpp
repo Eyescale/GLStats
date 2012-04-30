@@ -52,8 +52,7 @@ class Data
 public:
     uint128_t computeMinMax( const uint32_t nFrames )
     {
-        sort();
-
+        obsolete( nFrames );
         uint64_t xMax = 0;
         uint64_t xMin = std::numeric_limits< uint64_t >::max();
 
@@ -63,13 +62,23 @@ public:
         for( ItemsCIter i = items.begin(); i != items.end(); ++i )
         {
             const Item& item = *i;
-            if( item.frame < startFrame )
-                break;
-
             xMin = LB_MIN( xMin, item.start );
             xMax = LB_MAX( xMax, item.end );
         }
         return uint128_t( xMax, xMin );
+    }
+
+    void obsolete( const uint32_t nFrames )
+    {
+        sort();
+        if( items.empty( ))
+            return;
+
+        uint32_t startFrame = items.back().frame;
+        startFrame = startFrame > nFrames ? startFrame - nFrames : 0;
+
+        while( items.front().frame < startFrame )
+            items.pop_front();
     }
 
     void sort() { std::sort( items.begin(), items.end(), _compare ); }
