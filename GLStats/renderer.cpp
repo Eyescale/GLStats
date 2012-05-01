@@ -199,7 +199,7 @@ public:
             }
         }
 
-        //----- statistics
+        //----- statistic items
         uint32_t inset = 0;
 
         last = &items.front();
@@ -233,7 +233,12 @@ public:
                 glVertex3f( x2, y2, 0.f );
             } glEnd();
 
-            last = &item;
+            if( !item.text.empty( ))
+            {
+                glColor4f( 1.f, 1.f, 1.f, 1.f );
+                glRasterPos3f( x1+1, y2, 0.f );
+                api->drawText( item.text );
+            }
         }
 
         glLogicOp( GL_XOR );
