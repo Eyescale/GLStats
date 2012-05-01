@@ -101,13 +101,16 @@ public:
 
         //----- alternating frame background, entity names
         const Item* last = &items.front();
-        typedef std::pair< uint32_t, uint128_t > FrameTime;
+        typedef std::pair< uint32_t, uint64_t > FrameTime;
         typedef std::vector< FrameTime > FrameTimes;
         typedef stde::hash_map< uint64_t, FrameTimes > FrameTimesMap;
+        typedef stde::hash_map< uint32_t, uint64_t > FrameEndMap;
         typedef FrameTimes::const_iterator FrameTimesCIter;
         typedef FrameTimesMap::const_iterator FrameTimesMapCIter;
+        typedef FrameEndMap::const_iterator FrameEndMapCIter;
 
         FrameTimesMap frameTimes;
+        FrameEndMap endTimes;
         uint64_t startTime = last->start;
         uint64_t endTime = 0;
 
@@ -123,8 +126,14 @@ public:
                 const uint64_t row = ( uint64_t( last->entity ) << 32 ) +
                                      last->thread;
                 FrameTimes& times = frameTimes[ row ];
-                const uint128_t time( endTime, startTime );
-                times.push_back( std::make_pair( last->frame, time ));
+                times.push_back( std::make_pair( last->frame, startTime ));
+
+                FrameEndMapCIter j = endTimes.find( last->frame );
+                if( j == endTimes.end( ))
+                    endTimes[ last->frame ] = endTime;
+                else
+                    endTimes[ last->frame ] = LB_MAX( endTimes[ last->frame ],
+                                                      endTime );
 
                 startTime = item.start;
                 endTime = item.end;
@@ -149,11 +158,15 @@ public:
             const float y1 = float( y + space );
             const float y2 = float( y - barHeight -space );
 
-            for( FrameTimesCIter j = times.begin(); j != times.end(); ++j )
+            for( FrameTimesCIter j = times.begin(); j != times.end(); )
             {
                 const uint32_t frame = j->first;
-                const uint64_t start = j->second.low();
-                const uint64_t end = j->second.high();
+                const uint64_t start = j->second;
+
+                ++j;
+                uint64_t end = (j == times.end( )) ? x.high() : j->second;
+                if( end > endTimes[ frame ] )
+                    end = endTimes[ frame ];
 
                 const float x1 = float(start - xOffset) / scale - gap;
                 const float x2 = float(end - xOffset) / scale - gap;
