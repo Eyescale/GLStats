@@ -105,7 +105,7 @@ void Data::addEntity( const uint32_t identifier, const Entity& entity )
     impl_->entities[ identifier ] = entity;
 }
 
-const Entity& Data::getEntity( const uint32_t identifier )
+const Entity& Data::getEntity( const uint32_t identifier ) const
 {
     const EntityMapCIter i = impl_->entities.find( identifier );
     if( i == impl_->entities.end( ))
@@ -118,7 +118,7 @@ void Data::addThread( const uint32_t identifier, const Thread& thread )
     impl_->threads[ identifier ] = thread;
 }
 
-const Thread& Data::getThread( const uint32_t identifier )
+const Thread& Data::getThread( const uint32_t identifier ) const
 {
     const ThreadMapCIter i = impl_->threads.find( identifier );
     if( i == impl_->threads.end( ))
