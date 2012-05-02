@@ -40,6 +40,7 @@ static const uint32_t nFrames = 3;
 static const uint32_t space = 2; // pixel
 static const uint32_t gap = space<<1; // pixel
 static const uint32_t barHeight = 10; // pixel
+static const uint32_t rowHeight = barHeight + space;
 
 typedef std::set< uint32_t > ThreadSet;
 typedef ThreadSet::const_iterator ThreadSetCIter;
@@ -244,13 +245,25 @@ public:
         glLogicOp( GL_XOR );
         glEnable( GL_COLOR_LOGIC_OP );
 
-        nextY -= (barHeight + gap);
-        glRasterPos3f( space, static_cast< float >( nextY ), 0.f );
         glColor4f( 1.f, 1.f, 1.f, 1.f );
 
         const Strings& text = data.getText();
         for( StringsCIter i = text.begin(); i != text.end(); ++i )
-            api->drawText( *i );     
+        {
+            nextY -= (barHeight + gap);
+            glRasterPos3f( space, static_cast< float >( nextY ), 0.f );
+            api->drawText( *i );
+        }
+
+        std::stringstream stream;
+        if( scale >= 1.f )
+            stream << uint32_t( scale ) << " ms := 1 pixel";
+        else
+            stream << "1 ms := " << uint32_t( 1.f / scale ) << " pixel";
+
+        nextY -= (barHeight + gap);
+        glRasterPos3f( space, static_cast< float >( nextY ), 0.f );
+        api->drawText( stream.str( ));
     }
 
 #if 0
@@ -262,7 +275,7 @@ public:
         const EntityData& data = i->second;
 
         glColor3f( 1.f, 1.f, 1.f );
-        glRasterPos3f( 60.f, data.yPos - (barHeight + space), 0.99f );
+        glRasterPos3f( 60.f, data.yPos - rowHeight, 0.99f );
         font->draw( data.name );
 
         std::stringstream downloaders;
@@ -275,7 +288,7 @@ public:
         {
             if( data.threads[THREAD_ASYNC1] )
             {
-                glRasterPos3f( 80.f, data.yPos - 2 * (barHeight + space), 0.99f );
+                glRasterPos3f( 80.f, data.yPos - 2 * rowHeight, 0.99f );
                 font->draw( "read" );
             }
             else
@@ -292,7 +305,7 @@ public:
         }
         if( !compressors.str().empty( ))
         {
-            const float y = data.yPos - data.threads.count() * (barHeight + space);
+            const float y = data.yPos - data.threads.count() * rowHeight;
             glRasterPos3f( 80.f, y, 0.99f );
             font->draw( std::string( "compress" ) + compressors.str( ));
         }
@@ -300,7 +313,7 @@ public:
 
     //----- Global stats (scale, GPU idle)
     glColor3f( 1.f, 1.f, 1.f );
-    nextY -= (barHeight + space);
+    nextY -= rowHeight;
     glRasterPos3f( 60.f, float( nextY ), 0.99f );
     std::ostringstream text;
     text << scale << "ms/pixel";
@@ -342,7 +355,7 @@ public:
         {
           case Statistic::CHANNEL_FRAME_TRANSMIT:
             x = 0.f;
-            nextY -= (barHeight + space);
+            nextY -= rowHeight;
 
             glColor3f( 1.f, 1.f, 1.f );
             glRasterPos3f( x+1.f, nextY-12.f, 0.f );
@@ -350,7 +363,7 @@ public:
 
           case Statistic::WINDOW_FINISH:
             x = 0.f;
-            nextY -= (barHeight + space);
+            nextY -= rowHeight;
 
             glColor3f( 1.f, 1.f, 1.f );
             glRasterPos3f( x+1.f, nextY-12.f, 0.f );
@@ -361,7 +374,7 @@ public:
 
           case Statistic::NODE_FRAME_DECOMPRESS:
             x = 0.f;
-            nextY -= (barHeight + space);
+            nextY -= rowHeight;
 
             glColor3f( 1.f, 1.f, 1.f );
             glRasterPos3f( x+1.f, nextY-12.f, 0.f );
