@@ -36,7 +36,7 @@
 
 namespace GLStats
 {
-static const uint32_t nFrames = 3;
+static const uint32_t nFrames = 4;
 static const uint32_t space = 2; // pixel
 static const uint32_t gap = space<<1; // pixel
 static const uint32_t barHeight = 10; // pixel
@@ -267,71 +267,6 @@ public:
     }
 
 #if 0
-
-    //----- Entitity names
-    for( std::map< uint32_t, EntityData >::const_iterator i = entities.begin();
-         i != entities.end(); ++i )
-    {
-        const EntityData& data = i->second;
-
-        glColor3f( 1.f, 1.f, 1.f );
-        glRasterPos3f( 60.f, data.yPos - rowHeight, 0.99f );
-        font->draw( data.name );
-
-        std::stringstream downloaders;
-        for( std::set<uint32_t>::const_iterator j = data.downloaders.begin();
-             j != data.downloaders.end(); ++j )
-        {
-            downloaders << " 0x" << std::hex << *j << std::dec;
-        }
-        if( !downloaders.str().empty( ))
-        {
-            if( data.threads[THREAD_ASYNC1] )
-            {
-                glRasterPos3f( 80.f, data.yPos - 2 * rowHeight, 0.99f );
-                font->draw( "read" );
-            }
-            else
-                font->draw( std::string( ", r" ) + downloaders.str( ));
-
-            font->draw( downloaders.str( ));
-        }
-
-        std::stringstream compressors;
-        for( std::set<uint32_t>::const_iterator j = data.compressors.begin();
-             j != data.compressors.end(); ++j )
-        {
-            compressors << " 0x" << std::hex << *j << std::dec;
-        }
-        if( !compressors.str().empty( ))
-        {
-            const float y = data.yPos - data.threads.count() * rowHeight;
-            glRasterPos3f( 80.f, y, 0.99f );
-            font->draw( std::string( "compress" ) + compressors.str( ));
-        }
-    }
-
-    //----- Global stats (scale, GPU idle)
-    glColor3f( 1.f, 1.f, 1.f );
-    nextY -= rowHeight;
-    glRasterPos3f( 60.f, float( nextY ), 0.99f );
-    std::ostringstream text;
-    text << scale << "ms/pixel";
-
-    if( !idles.empty( ))
-        text << ", Idle:";
-
-    for( std::map< uint32_t, IdleData >::const_iterator i = idles.begin();
-         i != idles.end(); ++i )
-    {
-        const IdleData& data = i->second;
-        LBASSERT( data.nIdle > 0 );
-
-        text << " " << data.name << ":" << data.idle / data.nIdle << "%";
-    }
-
-    font->draw( text.str( ));
-    
     //----- Legend
     nextY -= space;
     float x = 0.f;
