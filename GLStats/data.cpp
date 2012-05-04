@@ -20,6 +20,7 @@
 #include "entity.h"
 #include "item.h"
 #include "thread.h"
+#include "type.h"
 
 #include <lunchbox/stdExt.h>
 #include <limits>
@@ -36,6 +37,7 @@ namespace detail
 {
 Entity nullEntity_;
 Thread nullThread_;
+Type nullType_;
 
 static bool _compare( const Item& i1, const Item& i2 )
 {
@@ -86,6 +88,7 @@ public:
 
     EntityMap entities;
     ThreadMap threads;
+    TypeMap types;
     Items items;
     Strings text;
 };
@@ -124,6 +127,24 @@ const Thread& Data::getThread( const uint32_t identifier ) const
     if( i == impl_->threads.end( ))
         return detail::nullThread_;
     return i->second;
+}
+
+void Data::addType( const uint32_t identifier, const Type& type )
+{
+    impl_->types[ identifier ] = type;
+}
+
+const Type& Data::getType( const uint32_t identifier ) const
+{
+    const TypeMapCIter i = impl_->types.find( identifier );
+    if( i == impl_->types.end( ))
+        return detail::nullType_;
+    return i->second;
+}
+
+const TypeMap& Data::getTypes() const
+{
+    return impl_->types;
 }
 
 void Data::addItem( const Item& item )

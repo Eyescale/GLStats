@@ -28,7 +28,6 @@ namespace GLStats
         Entity() {}
 
         std::string name; //!< Name printed in statistics
-        std::string typeName; //!< Name unique to all entities of the same type
     };
 }
 

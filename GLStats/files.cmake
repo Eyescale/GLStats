@@ -13,6 +13,7 @@ set(GLSTATS_PUBLIC_HEADERS
   item.h
   renderer.h
   thread.h
+  type.h
   types.h
   )
 

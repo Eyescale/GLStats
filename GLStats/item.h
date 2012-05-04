@@ -25,18 +25,13 @@ namespace GLStats
     /** One statistics item. */
     struct Item
     {
-        Item() : start( -1 ), end( -1 ), entity( 0 ), thread( 0 ) , frame( 0 )
-               , layer( 0 )
-            {
-                color[0] = 1.f;
-                color[1] = 1.f;
-                color[2] = 1.f; 
-                color[3] = .6f;
-           }
+        Item() : start( -1 ), end( -1 ), type( 0 ), entity( 0 ), thread( 0 )
+               , frame( 0 ), layer( 0 )
+            {}
 
         uint64_t start;   //!< Beginning of the event
         uint64_t end;     //!< End of the event
-        float color[4];   //!< Base color of the event
+        uint32_t type;    //!< Event type
         uint32_t entity;  //!< Identifier of the reporting entity
         uint32_t thread;  //!< Identifier of the reporting thread
         uint32_t frame;   //!< The rendering frame number

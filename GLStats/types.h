@@ -22,6 +22,7 @@
 
 #include <lunchbox/types.h>
 #include <deque>
+#include <map>
 
 namespace GLStats
 {
@@ -30,12 +31,15 @@ class Renderer;
 struct Entity;
 struct Item;
 struct Thread;
+struct Type;
 
 using lunchbox::uint128_t;
 using lunchbox::Strings;
 using lunchbox::StringsCIter;
 
 typedef std::deque< Item > Items;
+typedef std::map< uint32_t, Type > TypeMap;
+typedef TypeMap::const_iterator TypeMapCIter;
 }
 
 #endif //GLSTATS_TYPES_H

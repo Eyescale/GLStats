@@ -21,6 +21,7 @@
 #include "entity.h"
 #include "item.h"
 #include "thread.h"
+#include "type.h"
 
 #include <lunchbox/debug.h>
 #include <lunchbox/os.h>
@@ -41,6 +42,7 @@ static const uint32_t space = 2; // pixel
 static const uint32_t gap = space<<1; // pixel
 static const uint32_t barHeight = 10; // pixel
 static const uint32_t rowHeight = barHeight + space;
+static const float legendWidth = 60.f; // pixel
 
 typedef std::set< uint32_t > ThreadSet;
 typedef ThreadSet::const_iterator ThreadSetCIter;
@@ -97,7 +99,7 @@ public:
         {
             const ThreadSet& threads = i->second;
             yPos[ i->first ] = nextY;
-            nextY -= threads.size() * (barHeight + gap);
+            nextY -= threads.size() * rowHeight;
         }
 
         //----- alternating frame background, entity names
@@ -155,7 +157,7 @@ public:
             const ThreadSet& threads = entities[ entity ];
             const ThreadSetCIter threadPos = threads.find( thread );
             const uint32_t y = yPos[ entity ] -
-                std::distance( threads.begin(), threadPos ) * (barHeight + gap);
+                std::distance( threads.begin(), threadPos ) * rowHeight;
             const float y1 = float( y + space );
             const float y2 = float( y - barHeight -space );
 
@@ -215,10 +217,11 @@ public:
             else if( item.layer != last->layer )
                 inset += space;
 
+            const Type& type = data.getType( item.type );
             const ThreadSet& threads = entities[ item.entity ];
             const ThreadSetCIter j = threads.find( item.thread );
             const uint32_t y = yPos[ item.entity ] - 
-                std::distance( threads.begin(), j ) * (barHeight + gap);
+                std::distance( threads.begin(), j ) * rowHeight;
 
             const float x1 = float( item.start - xOffset ) / scale - gap;
             const float x2 = float( item.end   - xOffset ) / scale - gap;
@@ -226,7 +229,7 @@ public:
             const float y2 = float( y - barHeight + inset );
             LBASSERTINFO( y2 < y1, y2 << " >= " << y1 );
 
-            glColor4fv( item.color );
+            glColor4fv( type.color );
             glBegin( GL_QUADS ); {
                 glVertex3f( x2, y1, 0.f );
                 glVertex3f( x1, y1, 0.f );
@@ -250,7 +253,7 @@ public:
         const Strings& text = data.getText();
         for( StringsCIter i = text.begin(); i != text.end(); ++i )
         {
-            nextY -= (barHeight + gap);
+            nextY -= rowHeight;
             glRasterPos3f( space, static_cast< float >( nextY ), 0.f );
             api->drawText( *i );
         }
@@ -261,93 +264,69 @@ public:
         else
             stream << "1 ms := " << uint32_t( 1.f / scale ) << " pixel";
 
-        nextY -= (barHeight + gap);
+        nextY -= rowHeight;
         glRasterPos3f( space, static_cast< float >( nextY ), 0.f );
         api->drawText( stream.str( ));
+
+        _drawLegend( data, nextY );
     }
-
-#if 0
-    //----- Legend
-    nextY -= space;
-    float x = 0.f;
-
-    glRasterPos3f( x+1.f, nextY-12.f, 0.f );
-    glColor3f( 1.f, 1.f, 1.f );
-    font->draw( "channel" );
-    glDisable( GL_COLOR_LOGIC_OP );
-
-    for( size_t i = 1; i < Statistic::CONFIG_START_FRAME; ++i )
-    {
-        const Statistic::Type type = static_cast< Statistic::Type >( i );
-        if( type == Statistic::CHANNEL_DRAW_FINISH ||
-            type == Statistic::PIPE_IDLE || type == Statistic::WINDOW_FPS ||
-            type == Statistic::CHANNEL_ASYNC_READBACK )
-        {
-            continue;
-        }
-
-        switch( type )
-        {
-          case Statistic::CHANNEL_FRAME_TRANSMIT:
-            x = 0.f;
-            nextY -= rowHeight;
-
-            glColor3f( 1.f, 1.f, 1.f );
-            glRasterPos3f( x+1.f, nextY-12.f, 0.f );
-            break;
-
-          case Statistic::WINDOW_FINISH:
-            x = 0.f;
-            nextY -= rowHeight;
-
-            glColor3f( 1.f, 1.f, 1.f );
-            glRasterPos3f( x+1.f, nextY-12.f, 0.f );
-            glEnable( GL_COLOR_LOGIC_OP );
-            font->draw( "window" );
-            glDisable( GL_COLOR_LOGIC_OP );
-            break;
-
-          case Statistic::NODE_FRAME_DECOMPRESS:
-            x = 0.f;
-            nextY -= rowHeight;
-
-            glColor3f( 1.f, 1.f, 1.f );
-            glRasterPos3f( x+1.f, nextY-12.f, 0.f );
-            glEnable( GL_COLOR_LOGIC_OP );
-            font->draw( "node" );
-            glDisable( GL_COLOR_LOGIC_OP );
-            break;
-
-          default:
-            break;
-        }
-
-        x += 60.f;
-        const float x2 = x + 60.f - space; 
-        const float y1 = float( nextY );
-        const float y2 = float( nextY - barHeight );
-
-        glColor3fv( Statistic::getColor( type ).array );
-        glBegin( GL_QUADS );
-            glVertex3f( x2, y1, 0.f );
-            glVertex3f( x,  y1, 0.f );
-            glVertex3f( x,  y2, 0.f );
-            glVertex3f( x2, y2, 0.f );
-        glEnd();
-
-        glColor3f( 0.f, 0.f, 0.f );
-        glRasterPos3f( x+1.f, nextY-12.f, 0.f );
-        font->draw( Statistic::getName( type ));
-    }
-    
-    glColor3f( 1.f, 1.f, 1.f );
-    window->drawFPS();
-    EQ_GL_CALL( resetAssemblyState( ));
-#endif
 
     GLStats::Renderer* api;
     uint32_t width;
     uint32_t height;
+
+private:
+    void _drawLegend( ::GLStats::Data& data, const uint32_t y )
+    {
+        uint32_t nextY = y;
+        const TypeMap& types = data.getTypes();
+    
+        nextY -= space;
+        float x1 = float( space );
+        const Type* last = &types.rbegin()->second;
+
+        for( TypeMapCIter i = types.begin(); i != types.end(); ++i )
+        {
+            const Type& type = i->second;
+            if( type.group != last->group )
+            {
+                x1 = float( space );
+                nextY -= rowHeight;
+                glRasterPos3f( x1, nextY, 0.f );
+                glEnable( GL_COLOR_LOGIC_OP );
+                api->drawText( type.group );
+                glDisable( GL_COLOR_LOGIC_OP );
+            }
+            else if( type.subgroup != last->subgroup )
+            {
+                x1 = float( space );
+                nextY -= rowHeight;
+                glRasterPos3f( x1 + rowHeight, nextY, 0.f );
+                glEnable( GL_COLOR_LOGIC_OP );
+                api->drawText( type.subgroup );
+                glDisable( GL_COLOR_LOGIC_OP );
+            }
+            last = &type;
+
+            x1 += legendWidth;
+            const float x2 = x1 + legendWidth - space; 
+            const float y1 = float( nextY );
+            const float y2 = float( nextY - barHeight );
+
+            glColor3fv( type.color );
+            glBegin( GL_QUADS ); {
+                glVertex3f( x2, y1, 0.f );
+                glVertex3f( x1, y1, 0.f );
+                glVertex3f( x1, y2, 0.f );
+                glVertex3f( x2, y2, 0.f );
+            } glEnd();
+
+            glColor3f( 0.f, 0.f, 0.f );
+            glRasterPos3f( x1+space, nextY-barHeight, 0.f );
+            api->drawText( type.name );
+        }
+    }
+
 };
 }
 

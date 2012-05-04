@@ -49,6 +49,15 @@ namespace detail { class Data; }
         /** @return the thread description for the given id. */
         const Thread& getThread( const uint32_t identifier ) const;
 
+        /** Add an type description. */
+        GLSTATS_API void addType( const uint32_t identifier, const Type& type );
+
+        /** @return the type description for the given id. */
+        const Type& getType( const uint32_t identifier ) const;
+
+        /** @return the map of all types. */
+        GLSTATS_API const TypeMap& getTypes() const;
+
         /** Add a statistics item. */
         GLSTATS_API void addItem( const Item& item );
 
