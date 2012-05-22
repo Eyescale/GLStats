@@ -264,7 +264,7 @@ public:
         else
             stream << "1 ms := " << uint32_t( 1.f / scale ) << " pixel";
 
-        nextY -= rowHeight;
+        nextY -= rowHeight + space;
         glRasterPos3f( space, static_cast< float >( nextY ), 0.f );
         api->drawText( stream.str( ));
 
@@ -278,11 +278,9 @@ public:
 private:
     void _drawLegend( ::GLStats::Data& data, const uint32_t y )
     {
-        uint32_t nextY = y;
-        const TypeMap& types = data.getTypes();
-    
-        nextY -= space;
+        uint32_t nextY = y + barHeight - space;
         float x1 = float( space );
+        const TypeMap& types = data.getTypes();
         const Type* last = &types.rbegin()->second;
 
         for( TypeMapCIter i = types.begin(); i != types.end(); ++i )
@@ -292,7 +290,8 @@ private:
             {
                 x1 = float( space );
                 nextY -= rowHeight;
-                glRasterPos3f( x1, nextY, 0.f );
+                glColor3f( 1.f, 1.f, 1.f );
+                glRasterPos3f( x1, nextY - barHeight, 0.f );
                 glEnable( GL_COLOR_LOGIC_OP );
                 api->drawText( type.group );
                 glDisable( GL_COLOR_LOGIC_OP );
@@ -301,7 +300,8 @@ private:
             {
                 x1 = float( space );
                 nextY -= rowHeight;
-                glRasterPos3f( x1 + rowHeight, nextY, 0.f );
+                glColor3f( 1.f, 1.f, 1.f );
+                glRasterPos3f( x1 + rowHeight, nextY - barHeight, 0.f );
                 glEnable( GL_COLOR_LOGIC_OP );
                 api->drawText( type.subgroup );
                 glDisable( GL_COLOR_LOGIC_OP );
