@@ -56,6 +56,15 @@ typedef Items::const_iterator ItemsCIter;
 
 namespace detail
 {
+static bool _compare( const Type& t1, const Type& t2 )
+{
+    if( t1.group != t2.group )
+        return t1.group<t2.group;
+    if( t1.subgroup != t2.subgroup )
+        return t1.subgroup<t2.subgroup;
+    return t1.name<t2.name;
+}
+
 class Renderer
 {
 public:
@@ -280,12 +289,17 @@ private:
     {
         uint32_t nextY = y + barHeight - space;
         float x1 = float( space );
-        const TypeMap& types = data.getTypes();
-        const Type* last = &types.rbegin()->second;
+        const TypeMap& typeMap = data.getTypes();
 
-        for( TypeMapCIter i = types.begin(); i != types.end(); ++i )
+        Types types;
+        for( TypeMapCIter i = typeMap.begin(); i != typeMap.end(); ++i )
+            types.push_back( i->second );
+        std::sort( types.begin(), types.end(), _compare );
+
+        const Type* last = &types.back();
+        for( TypesCIter i = types.begin(); i != types.end(); ++i )
         {
-            const Type& type = i->second;
+            const Type& type = *i;
             if( type.group != last->group )
             {
                 x1 = float( space );

@@ -40,6 +40,8 @@ using lunchbox::StringsCIter;
 typedef std::deque< Item > Items;
 typedef std::map< uint32_t, Type > TypeMap;
 typedef TypeMap::const_iterator TypeMapCIter;
+typedef std::vector< Type > Types;
+typedef Types::const_iterator TypesCIter;
 }
 
 #endif //GLSTATS_TYPES_H
