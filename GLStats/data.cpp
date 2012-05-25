@@ -53,9 +53,8 @@ static bool _compare( const Item& i1, const Item& i2 )
 class Data
 {
 public:
-    uint128_t computeMinMax( const uint32_t nFrames )
+    uint128_t computeMinMax( const uint32_t nFrames ) const
     {
-        obsolete( nFrames );
         uint64_t xMax = 0;
         uint64_t xMin = std::numeric_limits< uint64_t >::max();
 
@@ -157,7 +156,7 @@ const Items& Data::getItems() const
     return impl_->items;
 }
 
-uint128_t Data::computeMinMax( const uint32_t nFrames )
+uint128_t Data::computeMinMax( const uint32_t nFrames ) const
 {
     return impl_->computeMinMax( nFrames );
 }

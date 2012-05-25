@@ -70,7 +70,7 @@ class Renderer
 public:
     Renderer() : api( 0 ), width( 0 ), height( 0 ) {}
 
-    void draw( ::GLStats::Data& data )
+    void draw( const ::GLStats::Data& data )
     {
         const Items& items = data.getItems();
         if( width == 0 || height == 0 || items.empty( ))
@@ -285,7 +285,7 @@ public:
     uint32_t height;
 
 private:
-    void _drawLegend( ::GLStats::Data& data, const uint32_t y )
+    void _drawLegend( const ::GLStats::Data& data, const uint32_t y )
     {
         uint32_t nextY = y + barHeight - space;
         float x1 = float( space );
@@ -365,7 +365,7 @@ void Renderer::obsolete( Data& data )
 {
 }
 
-void Renderer::draw( Data& data )
+void Renderer::draw( const Data& data )
 {
     impl_->draw( data );
 }

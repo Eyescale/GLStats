@@ -48,7 +48,7 @@ namespace detail { class Renderer; }
          * The OpenGL state has to be set up to ...
          * @param data the statistics data
          */
-        GLSTATS_API void draw( Data& data );
+        GLSTATS_API void draw( const Data& data );
 
     protected:
         virtual void drawText( const std::string& text ) = 0;

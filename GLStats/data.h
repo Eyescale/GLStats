@@ -65,7 +65,7 @@ namespace detail { class Data; }
         GLSTATS_API const Items& getItems() const;
 
         /** @return the min and max time for the last n frames. */
-        GLSTATS_API uint128_t computeMinMax( const uint32_t nFrames );
+        GLSTATS_API uint128_t computeMinMax( const uint32_t nFrames ) const;
 
         /** Add additional text at the bottom. */
         GLSTATS_API void addText( const std::string& text );
