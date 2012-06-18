@@ -1,15 +1,15 @@
 
-/* Copyright (c) 2012, Stefan Eilemann <eile@eyescale.ch> 
+/* Copyright (c) 2012, Stefan Eilemann <eile@eyescale.ch>
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License version 2.1 as published
  * by the Free Software Foundation.
- *  
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this library; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
@@ -96,7 +96,7 @@ public:
         {
             const Item& item = *i;
             if( item.frame < startFrame )
-                break;
+                continue;
 
             ThreadSet& threads = entities[ item.entity ];
             threads.insert( item.thread );
@@ -132,6 +132,14 @@ public:
             if( item.frame < startFrame )
                 continue;
 
+            if( yPos.find( item.entity ) == yPos.end( ))
+            {
+                LBASSERTINFO( false, "Entity " << item.entity <<
+                              " undeclared, item: " << item );
+                yPos[ item.entity ] = nextY;
+                nextY -= rowHeight;
+            }
+
             if( item.entity != last->entity || item.thread != last->thread ||
                 item.frame != last->frame )
             {
@@ -150,7 +158,7 @@ public:
                 startTime = item.start;
                 endTime = item.end;
             }
- 
+
             startTime = LB_MIN( item.start, startTime );
             endTime = LB_MAX( item.end, endTime );
             last = &item;
@@ -182,7 +190,7 @@ public:
 
                 const float x1 = float(start - xOffset) / scale - gap;
                 const float x2 = float(end - xOffset) / scale - gap;
-     
+
                 if( (endFrame - frame) & 0x1 )
                     glColor4f( .4f, .4f, .4f, .6f );
                 else
@@ -229,14 +237,14 @@ public:
             const Type& type = data.getType( item.type );
             const ThreadSet& threads = entities[ item.entity ];
             const ThreadSetCIter j = threads.find( item.thread );
-            const uint32_t y = yPos[ item.entity ] - 
+            const uint32_t y = yPos[ item.entity ] -
                 std::distance( threads.begin(), j ) * rowHeight;
 
             const float x1 = float( item.start - xOffset ) / scale - gap;
             const float x2 = float( item.end   - xOffset ) / scale - gap;
             const float y1 = float( y - inset );
             const float y2 = float( y - barHeight + inset );
-            LBASSERTINFO( y2 < y1, y2 << " >= " << y1 );
+            LBASSERTINFO( y2 < y1, y2 << " >= " << y1 << " (" << y << ")" );
 
             glColor4fv( type.color );
             glBegin( GL_QUADS ); {
@@ -323,7 +331,7 @@ private:
             last = &type;
 
             x1 += legendWidth;
-            const float x2 = x1 + legendWidth - space; 
+            const float x2 = x1 + legendWidth - space;
             const float y1 = float( nextY );
             const float y2 = float( nextY - barHeight );
 

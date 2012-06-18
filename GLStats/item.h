@@ -19,6 +19,7 @@
 #define GLSTATS_ITEM_H
 
 #include <GLStats/api.h>
+#include <iostream>
 
 namespace GLStats
 {
@@ -38,6 +39,12 @@ namespace GLStats
         uint32_t layer;   //!< Depth of a (sub-)event
         std::string text; //!< Optional string at the end of the item
     };
+
+    inline std::ostream& operator << ( std::ostream& os, const Item& item )
+    {
+        return os << item.entity << '.' << item.thread << '@' << item.start
+                  << '-' << item.end << ':' << item.type;
+    }
 }
 
 #endif //GLSTATS_ITEM_H

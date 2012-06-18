@@ -22,6 +22,7 @@
 #include "thread.h"
 #include "type.h"
 
+#include <lunchbox/debug.h>
 #include <lunchbox/stdExt.h>
 #include <limits>
 
@@ -97,6 +98,10 @@ Data::Data()
         : impl_( new detail::Data )
 {}
 
+Data::Data( const Data& from )
+        : impl_( new detail::Data( *from.impl_ ))
+{}
+
 Data::~Data()
 {
     delete impl_;
@@ -148,6 +153,7 @@ const TypeMap& Data::getTypes() const
 
 void Data::addItem( const Item& item )
 {
+    LBASSERT( item.start <= item.end );
     impl_->items.push_back( item );
 }
 
@@ -174,6 +180,11 @@ void Data::clearText()
 const Strings& Data::getText() const
 {
     return impl_->text;
+}
+
+void Data::obsolete( const uint32_t nFrames )
+{
+    impl_->obsolete( nFrames );
 }
 
 }

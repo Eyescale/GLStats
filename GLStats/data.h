@@ -32,6 +32,9 @@ namespace detail { class Data; }
         /** Construct a new data storage. */
         GLSTATS_API Data();
 
+        /** Construct a copy of the data storage. */
+        GLSTATS_API Data( const Data& from );
+
         /** Destruct this data storage. */
         GLSTATS_API virtual ~Data();
 
@@ -75,6 +78,9 @@ namespace detail { class Data; }
 
         /** @return all additional text. */
         GLSTATS_API const Strings& getText() const;
+
+        /** Obsolete all data older than the given number of frames. */
+        GLSTATS_API void obsolete( const uint32_t nFrames );
 
     private:
         detail::Data* const impl_;

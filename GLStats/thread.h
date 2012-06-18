@@ -25,9 +25,8 @@ namespace GLStats
     /** One statistics thread. */
     struct Thread
     {
-        Thread() : identifier( 0 ) {}
+        Thread() {}
 
-        uint32_t identifier; //!< Thread identifier used in item
         std::string name; //!< Name printed in statistics
     };
 }
