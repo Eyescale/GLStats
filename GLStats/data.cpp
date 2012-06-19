@@ -33,6 +33,7 @@ typedef EntityMap::const_iterator EntityMapCIter;
 typedef stde::hash_map< uint32_t, Thread > ThreadMap;
 typedef ThreadMap::const_iterator ThreadMapCIter;
 typedef Items::const_iterator ItemsCIter;
+typedef Items::iterator ItemsIter;
 
 namespace detail
 {
@@ -59,9 +60,6 @@ public:
         uint64_t xMax = 0;
         uint64_t xMin = std::numeric_limits< uint64_t >::max();
 
-        uint32_t startFrame = items.back().frame;
-        startFrame = startFrame > nFrames ? startFrame - nFrames : 0;
-
         for( ItemsCIter i = items.begin(); i != items.end(); ++i )
         {
             const Item& item = *i;
@@ -77,11 +75,22 @@ public:
         if( items.empty( ))
             return;
 
-        uint32_t startFrame = items.back().frame;
-        startFrame = startFrame > nFrames ? startFrame - nFrames : 0;
+        uint32_t startFrame = 0;
+        for( ItemsCIter i = items.begin(); i != items.end(); ++i )
+            if( (*i).frame > startFrame )
+                startFrame = (*i).frame;
 
-        while( items.front().frame < startFrame )
-            items.pop_front();
+        startFrame = startFrame > nFrames ? startFrame - nFrames : 0;
+        if( startFrame == 0 )
+            return;
+
+        for( ItemsIter i = items.begin(); i != items.end(); )
+        {
+            if( (*i).frame < startFrame )
+                i = items.erase( i );
+            else
+                ++i;
+        }
     }
 
     void sort() { std::sort( items.begin(), items.end(), _compare ); }
@@ -153,7 +162,7 @@ const TypeMap& Data::getTypes() const
 
 void Data::addItem( const Item& item )
 {
-    LBASSERT( item.start <= item.end );
+    LBASSERTINFO( item.start <= item.end, item );
     impl_->items.push_back( item );
 }
 

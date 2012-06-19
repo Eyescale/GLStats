@@ -42,8 +42,8 @@ namespace GLStats
 
     inline std::ostream& operator << ( std::ostream& os, const Item& item )
     {
-        return os << item.entity << '.' << item.thread << '@' << item.start
-                  << '-' << item.end << ':' << item.type;
+        return os << item.entity << '.' << item.thread << "@ " << item.frame
+                  << "(" << item.start << '-' << item.end << "):" << item.type ;
     }
 }
 
