@@ -56,13 +56,24 @@ typedef Items::const_iterator ItemsCIter;
 
 namespace detail
 {
-static bool _compare( const Type& t1, const Type& t2 )
+static bool _compareTypes( const Type& t1, const Type& t2 )
 {
     if( t1.group != t2.group )
         return t1.group<t2.group;
     if( t1.subgroup != t2.subgroup )
         return t1.subgroup<t2.subgroup;
     return t1.name<t2.name;
+}
+
+static bool _compareItems( const Item& i1, const Item& i2 )
+{
+    if( i1.entity != i2.entity )
+        return i1.entity < i2.entity;
+    if( i1.thread != i2.thread )
+        return i1.thread < i2.thread;
+    if( i1.frame != i2.frame )
+        return i1.frame < i2.frame;
+    return i1.layer < i2.layer;
 }
 
 class Renderer
@@ -72,9 +83,11 @@ public:
 
     void draw( const ::GLStats::Data& data )
     {
-        const Items& items = data.getItems();
+        Items items = data.getItems();
         if( width == 0 || height == 0 || items.empty( ))
             return;
+
+        std::sort( items.begin(), items.end(), _compareItems );
 
         // Scale factor
         const uint128_t x = data.computeMinMax( nFrames );
@@ -302,7 +315,7 @@ private:
         Types types;
         for( TypeMapCIter i = typeMap.begin(); i != typeMap.end(); ++i )
             types.push_back( i->second );
-        std::sort( types.begin(), types.end(), _compare );
+        std::sort( types.begin(), types.end(), _compareTypes );
 
         const Type* last = &types.back();
         for( TypesCIter i = types.begin(); i != types.end(); ++i )

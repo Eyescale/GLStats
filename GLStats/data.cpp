@@ -41,17 +41,6 @@ Entity nullEntity_;
 Thread nullThread_;
 Type nullType_;
 
-static bool _compare( const Item& i1, const Item& i2 )
-{
-    if( i1.entity != i2.entity )
-        return i1.entity < i2.entity;
-    if( i1.thread != i2.thread )
-        return i1.thread < i2.thread;
-    if( i1.frame != i2.frame )
-        return i1.frame < i2.frame;
-    return i1.layer < i2.layer;
-}
-
 class Data
 {
 public:
@@ -71,7 +60,6 @@ public:
 
     void obsolete( const uint32_t nFrames )
     {
-        sort();
         if( items.empty( ))
             return;
 
@@ -92,8 +80,6 @@ public:
                 ++i;
         }
     }
-
-    void sort() { std::sort( items.begin(), items.end(), _compare ); }
 
     EntityMap entities;
     ThreadMap threads;
