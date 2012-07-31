@@ -121,7 +121,7 @@ public:
         {
             const ThreadSet& threads = i->second;
             yPos[ i->first ] = nextY;
-            nextY -= threads.size() * rowHeight;
+            nextY -= uint32_t( threads.size() * rowHeight );
         }
 
         //----- alternating frame background, entity names
