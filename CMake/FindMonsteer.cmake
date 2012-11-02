@@ -1,5 +1,5 @@
 #
-# Copyright 2012 Stefan Eilemann <eile@eyescale.ch>
+# Copyright 2012 Daniel Nachbaur <daniel.nachbaur@epfl.ch>
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions are met:
@@ -27,54 +27,51 @@
 #
 #==================================
 #
-# - Find Lunchbox
-# This module searches for the Lunchbox library
-#    See https://github.com/Eyescale/Lunchbox
+# - Find Monsteer
+# This module searches for the Monsteer library
+#    See https://github.com/BlueBrain/Monsteer
 #
 #==================================
 #
-# The following environment variables are respected for finding Lunchbox.
+# The following environment variables are respected for finding Monsteer.
 # CMAKE_PREFIX_PATH can also be used for this (see find_library() CMake
 # documentation).
 #
-#    LUNCHBOX_ROOT
-#    EQ_ROOT
+#    MONSTEER_ROOT
 #
 # This module defines the following output variables:
 #
-#    LUNCHBOX_FOUND - Was Lunchbox and all of the specified components found?
+#    MONSTEER_FOUND - Was Monsteer and all of the specified components found?
 #
-#    LUNCHBOX_VERSION - The version of Lunchbox which was found
+#    MONSTEER_VERSION - The version of Monsteer which was found
 #
-#    LUNCHBOX_VERSION_ABI - The DSO version of Lunchbox which was found
+#    MONSTEER_VERSION_ABI - The DSO version of Monsteer which was found
 #
-#    LUNCHBOX_INCLUDE_DIRS - Where to find the headers
+#    MONSTEER_INCLUDE_DIRS - Where to find the headers
 #
-#    LUNCHBOX_LIBRARIES - The Lunchbox libraries
+#    MONSTEER_LIBRARIES - The Monsteer libraries
 #
 #==================================
 # Example Usage:
 #
-#  find_package(Lunchbox 0.3.0 REQUIRED)
-#  include_directories(${LUNCHBOX_INCLUDE_DIRS})
+#  find_package(Monsteer 0.1.0 REQUIRED)
+#  include_directories(${MONSTEER_INCLUDE_DIRS})
 #
 #  add_executable(foo foo.cc)
-#  target_link_libraries(foo ${LUNCHBOX_LIBRARIES})
+#  target_link_libraries(foo ${MONSTEER_LIBRARIES})
 #
 #==================================
 # Naming convention:
-#  Local variables of the form _lunchbox_foo
-#  Input variables of the form Lunchbox_FOO
-#  Output variables of the form LUNCHBOX_FOO
+#  Local variables of the form _monsteer_foo
+#  Input variables of the form Monsteer_FOO
+#  Output variables of the form MONSTEER_FOO
 #
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/FindLunchbox)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/FindMonsteer)
 include(FindLibraryPackage)
 include(FindPackageHandleStandardArgs)
 
-find_library_package(Lunchbox INCLUDE lunchbox)
-find_package_handle_standard_args(Lunchbox DEFAULT_MSG
-                                  LUNCHBOX_LIBRARIES LUNCHBOX_INCLUDE_DIRS)
-if(LUNCHBOX_FOUND)
-  include("${LUNCHBOX_LIBRARY_DIRS}/../share/Lunchbox/CMake/options.cmake")
-endif()
+find_library_package(Monsteer INCLUDE monsteer TRANSIENT Collage DASH
+                                                         CODASH Lunchbox)
+find_package_handle_standard_args(Monsteer DEFAULT_MSG
+                                  MONSTEER_LIBRARIES MONSTEER_INCLUDE_DIRS)
