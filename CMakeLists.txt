@@ -24,7 +24,6 @@ else()
 endif()
 
 include(Common)
-include(DoxygenSetup)
 include(UpdateFile)
 include(InstallSymlink)
 include(FindPackages)
