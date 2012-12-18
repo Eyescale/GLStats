@@ -42,7 +42,7 @@ static const uint32_t space = 2; // pixel
 static const uint32_t gap = space<<1; // pixel
 static const uint32_t barHeight = 10; // pixel
 static const uint32_t rowHeight = barHeight + space;
-static const float legendWidth = 60.f; // pixel
+static const float legendWidth = 80.f; // pixel
 
 typedef std::set< uint32_t > ThreadSet;
 typedef ThreadSet::const_iterator ThreadSetCIter;
@@ -177,6 +177,8 @@ public:
             last = &item;
         }
 
+        glLogicOp( GL_XOR );
+
         for( FrameTimesMapCIter i = frameTimes.begin();
              i != frameTimes.end(); ++i )
         {
@@ -216,6 +218,7 @@ public:
                 } glEnd();
             }
 
+            glEnable( GL_COLOR_LOGIC_OP );
             if( thread == 0 )
             {
                 const Entity& entityData = data.getEntity( entity );
@@ -230,6 +233,7 @@ public:
                 glRasterPos3f( space + barHeight, y2, 0.f );
                 api->drawText( threadData.name );
             }
+            glDisable( GL_COLOR_LOGIC_OP );
         }
 
         //----- statistic items
@@ -275,9 +279,7 @@ public:
             }
         }
 
-        glLogicOp( GL_XOR );
         glEnable( GL_COLOR_LOGIC_OP );
-
         glColor4f( 1.f, 1.f, 1.f, 1.f );
 
         const Strings& text = data.getText();
