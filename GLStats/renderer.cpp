@@ -139,6 +139,8 @@ public:
         uint64_t startTime = last->start;
         uint64_t endTime = 0;
 
+        glLogicOp( GL_XOR );
+
         for( ItemsCIter i = items.begin(); i != items.end(); ++i )
         {
             const Item& item = *i;
@@ -215,21 +217,14 @@ public:
                     glVertex3f( x2, y2, 0.f );
                 } glEnd();
             }
-
-            if( thread == 0 )
-            {
-                const Entity& entityData = data.getEntity( entity );
-                glColor3f( 1.f, 1.f, 1.f );
-                glRasterPos3f( space, y2, 0.f );
-                api->drawText( entityData.name );
-            }
-            else
-            {
-                const Thread& threadData = data.getThread( thread );
-                glColor3f( 1.f, 1.f, 1.f );
-                glRasterPos3f( space + barHeight, y2, 0.f );
-                api->drawText( threadData.name );
-            }
+#endif
+            glEnable( GL_COLOR_LOGIC_OP );
+            glColor3f( 1.f, 1.f, 1.f );
+            glRasterPos3f( space + barHeight, y2, 0.f );
+            const std::string name = thread ? data.getThread( thread ).name :
+                                              data.getEntity( entity ).name;
+            api->drawText( name );
+            glDisable( GL_COLOR_LOGIC_OP );
         }
 
         //----- statistic items
@@ -275,9 +270,7 @@ public:
             }
         }
 
-        glLogicOp( GL_XOR );
         glEnable( GL_COLOR_LOGIC_OP );
-
         glColor4f( 1.f, 1.f, 1.f, 1.f );
 
         const Strings& text = data.getText();
