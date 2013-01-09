@@ -41,7 +41,7 @@ static const uint32_t nFrames = 4;
 static const uint32_t space = 2; // pixel
 static const uint32_t gap = space<<1; // pixel
 static const uint32_t barHeight = 10; // pixel
-static const uint32_t rowHeight = barHeight + space;
+static const uint32_t rowHeight = barHeight + gap;
 static const float legendWidth = 60.f; // pixel
 
 typedef std::set< uint32_t > ThreadSet;
@@ -165,8 +165,7 @@ public:
                 if( j == endTimes.end( ))
                     endTimes[ last->frame ] = endTime;
                 else
-                    endTimes[ last->frame ] = LB_MAX( endTimes[ last->frame ],
-                                                      endTime );
+                    endTimes[ last->frame ] = LB_MAX( j->second, endTime );
 
                 startTime = item.start;
                 endTime = item.end;
@@ -183,14 +182,15 @@ public:
             const uint64_t row = i->first;
             const uint32_t entity = row >> 32;
             const uint32_t thread = row & 0xFFFFFFFFu;
-            const FrameTimes& times = i->second;
             const ThreadSet& threads = entities[ entity ];
             const ThreadSetCIter threadPos = threads.find( thread );
             const uint32_t y = yPos[ entity ] -
                 std::distance( threads.begin(), threadPos ) * rowHeight;
+            const float y2 = float( y - barHeight - space );
+#if 1
+            // per-frame alternating background color
             const float y1 = float( y + space );
-            const float y2 = float( y - barHeight -space );
-
+            const FrameTimes& times = i->second;
             for( FrameTimesCIter j = times.begin(); j != times.end(); )
             {
                 const uint32_t frame = j->first;
@@ -201,13 +201,13 @@ public:
                 if( end > endTimes[ frame ] )
                     end = endTimes[ frame ];
 
-                const float x1 = float(start - xOffset) / scale - gap;
-                const float x2 = float(end - xOffset) / scale - gap;
+                const float x1 = float(start - xOffset) / scale - space;
+                const float x2 = float(end - xOffset) / scale - space;
 
                 if( (endFrame - frame) & 0x1 )
-                    glColor4f( .4f, .4f, .4f, .6f );
+                    glColor4f( .3f, .3f, .3f, .6f );
                 else
-                    glColor4f( .6f, .6f, .6f, .6f );
+                    glColor4f( .7f, .7f, .7f, .6f );
                 glBegin( GL_QUADS ); {
                     glVertex3f( x2, y1, 0.f );
                     glVertex3f( x1, y1, 0.f );
