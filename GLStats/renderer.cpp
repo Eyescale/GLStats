@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2012, Stefan Eilemann <eile@eyescale.ch>
+/* Copyright (c) 2012-2013, Stefan Eilemann <eile@eyescale.ch>
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License version 2.1 as published
@@ -228,19 +228,12 @@ public:
         }
 
         //----- statistic items
-        uint32_t inset = 0;
-
         last = &items.front();
         for( ItemsCIter i = items.begin(); i != items.end(); ++i )
         {
             const Item& item = *i;
             if( item.frame < startFrame )
                 continue;
-
-            if( item.frame != last->frame || item.entity != last->entity )
-                inset = 0;
-            else if( item.layer != last->layer )
-                inset += space;
 
             const Type& type = data.getType( item.type );
             const ThreadSet& threads = entities[ item.entity ];
@@ -250,6 +243,8 @@ public:
 
             const float x1 = float( item.start - xOffset ) / scale;
             const float x2 = float( item.end   - xOffset ) / scale;
+
+            const uint32_t inset = item.layer * space;
             const float y1 = float( y - inset );
             const float y2 = float( y - barHeight + inset );
             LBASSERTINFO( y2 < y1, y2 << " >= " << y1 << " (" << y << ")" );
