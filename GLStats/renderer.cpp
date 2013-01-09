@@ -203,8 +203,8 @@ public:
                 if( end > endTimes[ frame ] )
                     end = endTimes[ frame ];
 
-                const float x1 = float(start - xOffset) / scale - space;
-                const float x2 = float(end - xOffset) / scale - space;
+                const float x1 = float(start - xOffset) / scale;
+                const float x2 = float(end - xOffset) / scale;
 
                 if( (endFrame - frame) & 0x1 )
                     glColor4f( .3f, .3f, .3f, .6f );
@@ -248,8 +248,8 @@ public:
             const uint32_t y = yPos[ item.entity ] -
                 std::distance( threads.begin(), j ) * rowHeight;
 
-            const float x1 = float( item.start - xOffset ) / scale - gap;
-            const float x2 = float( item.end   - xOffset ) / scale - gap;
+            const float x1 = float( item.start - xOffset ) / scale;
+            const float x2 = float( item.end   - xOffset ) / scale;
             const float y1 = float( y - inset );
             const float y2 = float( y - barHeight + inset );
             LBASSERTINFO( y2 < y1, y2 << " >= " << y1 << " (" << y << ")" );
