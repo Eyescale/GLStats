@@ -37,7 +37,6 @@
 
 namespace GLStats
 {
-static const uint32_t nFrames = 4;
 static const uint32_t space = 2; // pixel
 static const uint32_t gap = space<<1; // pixel
 static const uint32_t barHeight = 10; // pixel
@@ -90,7 +89,7 @@ public:
         std::sort( items.begin(), items.end(), _compareItems );
 
         // Scale factor
-        const uint128_t x = data.computeMinMax( nFrames );
+        const uint128_t x = data.computeMinMax();
         const uint64_t totalTime = x.high() - x.low();
         float scale = 1.f;
 
@@ -103,14 +102,10 @@ public:
         // y positions
         EntityMap entities;
         const uint32_t endFrame = items.back().frame;
-        const uint32_t startFrame = endFrame > nFrames ? endFrame - nFrames : 0;
 
         for( ItemsCIter i = items.begin(); i != items.end(); ++i )
         {
             const Item& item = *i;
-            if( item.frame < startFrame )
-                continue;
-
             ThreadSet& threads = entities[ item.entity ];
             threads.insert( item.thread );
         }
@@ -144,8 +139,6 @@ public:
         for( ItemsCIter i = items.begin(); i != items.end(); ++i )
         {
             const Item& item = *i;
-            if( item.frame < startFrame )
-                continue;
 
             if( yPos.find( item.entity ) == yPos.end( ))
             {
@@ -232,9 +225,6 @@ public:
         for( ItemsCIter i = items.begin(); i != items.end(); ++i )
         {
             const Item& item = *i;
-            if( item.frame < startFrame )
-                continue;
-
             const Type& type = data.getType( item.type );
             const ThreadSet& threads = entities[ item.entity ];
             const ThreadSetCIter j = threads.find( item.thread );
