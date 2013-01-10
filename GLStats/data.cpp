@@ -102,7 +102,7 @@ Data::~Data()
     delete impl_;
 }
 
-void Data::addEntity( const uint32_t identifier, const Entity& entity )
+void Data::setEntity( const uint32_t identifier, const Entity& entity )
 {
     impl_->entities[ identifier ] = entity;
 }
@@ -115,7 +115,7 @@ const Entity& Data::getEntity( const uint32_t identifier ) const
     return i->second;
 }
 
-void Data::addThread( const uint32_t identifier, const Thread& thread )
+void Data::setThread( const uint32_t identifier, const Thread& thread )
 {
     impl_->threads[ identifier ] = thread;
 }
@@ -128,7 +128,7 @@ const Thread& Data::getThread( const uint32_t identifier ) const
     return i->second;
 }
 
-void Data::addType( const uint32_t identifier, const Type& type )
+void Data::setType( const uint32_t identifier, const Type& type )
 {
     impl_->types[ identifier ] = type;
 }

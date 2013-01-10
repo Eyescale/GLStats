@@ -38,22 +38,22 @@ namespace detail { class Data; }
         /** Destruct this data storage. */
         GLSTATS_API virtual ~Data();
 
-        /** Add an entity description. */
-        GLSTATS_API void addEntity( const uint32_t identifier,
+        /** Set an entity description. */
+        GLSTATS_API void setEntity( const uint32_t identifier,
                                     const Entity& entity );
 
         /** @return the entity description for the given id. */
         const Entity& getEntity( const uint32_t identifier ) const;
 
-        /** Add a thread description. */
-        GLSTATS_API void addThread( const uint32_t identifier,
+        /** Set a thread description. */
+        GLSTATS_API void setThread( const uint32_t identifier,
                                     const Thread& thread );
 
         /** @return the thread description for the given id. */
         const Thread& getThread( const uint32_t identifier ) const;
 
-        /** Add an type description. */
-        GLSTATS_API void addType( const uint32_t identifier, const Type& type );
+        /** Set an type description. */
+        GLSTATS_API void setType( const uint32_t identifier, const Type& type );
 
         /** @return the type description for the given id. */
         const Type& getType( const uint32_t identifier ) const;
