@@ -70,11 +70,11 @@ namespace detail { class Data; }
         /** @return the min and max time of the dataset. */
         GLSTATS_API uint128_t computeMinMax() const;
 
-        /** Remove all additional text. */
-        GLSTATS_API void clearText();
+        /** Set additional text at the bottom. */
+        GLSTATS_API void setText( const std::string& text );
 
-        /** @return all additional text. */
-        GLSTATS_API const Strings& getText() const;
+        /** @return the additional text. */
+        GLSTATS_API const std::string& getText() const;
 
         /** Obsolete all data older than the given number of frames. */
         GLSTATS_API void obsolete( const uint32_t nFrames );

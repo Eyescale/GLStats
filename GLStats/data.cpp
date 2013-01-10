@@ -85,7 +85,7 @@ public:
     ThreadMap threads;
     TypeMap types;
     Items items;
-    Strings text;
+    std::string text;
 };
 }
 
@@ -157,22 +157,17 @@ const Items& Data::getItems() const
     return impl_->items;
 }
 
-uint128_t Data::computeMinMax( const uint32_t nFrames ) const
+uint128_t Data::computeMinMax() const
 {
-    return impl_->computeMinMax( nFrames );
+    return impl_->computeMinMax();
 }
 
-void Data::addText( const std::string& text )
+void Data::setText( const std::string& text )
 {
-    impl_->text.push_back( text );
+    impl_->text = text;
 }
 
-void Data::clearText()
-{
-    impl_->text.clear();
-}
-
-const Strings& Data::getText() const
+const std::string& Data::getText() const
 {
     return impl_->text;
 }

@@ -258,12 +258,21 @@ public:
         glEnable( GL_COLOR_LOGIC_OP );
         glColor4f( 1.f, 1.f, 1.f, 1.f );
 
-        const Strings& text = data.getText();
-        for( StringsCIter i = text.begin(); i != text.end(); ++i )
+        // Additional text, format \n
+        std::string text = data.getText();
+        for( size_t pos = text.find( '\n' ); pos != std::string::npos;
+             pos = text.find( '\n' ))
         {
             nextY -= rowHeight;
             glRasterPos3f( space, static_cast< float >( nextY ), 0.f );
-            api->drawText( *i );
+            api->drawText( text.substr( 0, pos ));
+            text = text.substr( pos + 1 );
+        }
+        if( !text.empty( )) // last line
+        {
+            nextY -= rowHeight;
+            glRasterPos3f( space, static_cast< float >( nextY ), 0.f );
+            api->drawText( text );
         }
 
         std::stringstream stream;
