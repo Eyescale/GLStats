@@ -76,8 +76,11 @@ namespace detail { class Data; }
         /** @return the additional text. */
         GLSTATS_API const std::string& getText() const;
 
-        /** Obsolete all data older than the given number of frames. */
+        /** Obsolete all items older than the given number of frames. */
         GLSTATS_API void obsolete( const uint32_t nFrames );
+
+        /** Clear all data. */
+        GLSTATS_API void clear();
 
     private:
         detail::Data* const impl_;

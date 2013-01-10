@@ -177,4 +177,13 @@ void Data::obsolete( const uint32_t nFrames )
     impl_->obsolete( nFrames );
 }
 
+void Data::clear()
+{
+    impl_->entities.clear();
+    impl_->threads.clear();
+    impl_->types.clear();
+    impl_->items.clear();
+    impl_->text.clear();
+}
+
 }
