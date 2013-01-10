@@ -39,9 +39,6 @@ namespace detail { class Renderer; }
         GLSTATS_API void setViewport( const uint32_t width,
                                       const uint32_t height );
 
-        /** Remove unneeded items from the data set. */
-        GLSTATS_API void obsolete( Data& data );
-
         /**
          * Render the data set.
          *
