@@ -14,6 +14,7 @@ set(VERSION_PATCH "0")
 include(Common)
 include(UpdateFile)
 include(FindPackages)
+set(GLSTATS_TRANSIENT_LIBRARIES Lunchbox)
 
 add_subdirectory(GLStats)
 #add_subdirectory(tests)
