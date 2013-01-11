@@ -1,15 +1,15 @@
 
-/* Copyright (c) 2012, Stefan Eilemann <eile@eyescale.ch> 
+/* Copyright (c) 2012-2013, Stefan Eilemann <eile@eyescale.ch>
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License version 2.1 as published
  * by the Free Software Foundation.
- *  
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this library; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
@@ -44,7 +44,7 @@ Type nullType_;
 class Data
 {
 public:
-    uint128_t computeMinMax( const uint32_t nFrames ) const
+    uint128_t computeMinMax() const
     {
         uint64_t xMax = 0;
         uint64_t xMin = std::numeric_limits< uint64_t >::max();
@@ -85,7 +85,7 @@ public:
     ThreadMap threads;
     TypeMap types;
     Items items;
-    Strings text;
+    std::string text;
 };
 }
 
@@ -102,7 +102,7 @@ Data::~Data()
     delete impl_;
 }
 
-void Data::addEntity( const uint32_t identifier, const Entity& entity )
+void Data::setEntity( const uint32_t identifier, const Entity& entity )
 {
     impl_->entities[ identifier ] = entity;
 }
@@ -115,7 +115,7 @@ const Entity& Data::getEntity( const uint32_t identifier ) const
     return i->second;
 }
 
-void Data::addThread( const uint32_t identifier, const Thread& thread )
+void Data::setThread( const uint32_t identifier, const Thread& thread )
 {
     impl_->threads[ identifier ] = thread;
 }
@@ -128,7 +128,7 @@ const Thread& Data::getThread( const uint32_t identifier ) const
     return i->second;
 }
 
-void Data::addType( const uint32_t identifier, const Type& type )
+void Data::setType( const uint32_t identifier, const Type& type )
 {
     impl_->types[ identifier ] = type;
 }
@@ -157,22 +157,17 @@ const Items& Data::getItems() const
     return impl_->items;
 }
 
-uint128_t Data::computeMinMax( const uint32_t nFrames ) const
+uint128_t Data::computeMinMax() const
 {
-    return impl_->computeMinMax( nFrames );
+    return impl_->computeMinMax();
 }
 
-void Data::addText( const std::string& text )
+void Data::setText( const std::string& text )
 {
-    impl_->text.push_back( text );
+    impl_->text = text;
 }
 
-void Data::clearText()
-{
-    impl_->text.clear();
-}
-
-const Strings& Data::getText() const
+const std::string& Data::getText() const
 {
     return impl_->text;
 }
@@ -180,6 +175,15 @@ const Strings& Data::getText() const
 void Data::obsolete( const uint32_t nFrames )
 {
     impl_->obsolete( nFrames );
+}
+
+void Data::clear()
+{
+    impl_->entities.clear();
+    impl_->threads.clear();
+    impl_->types.clear();
+    impl_->items.clear();
+    impl_->text.clear();
 }
 
 }

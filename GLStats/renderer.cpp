@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2012, Stefan Eilemann <eile@eyescale.ch>
+/* Copyright (c) 2012-2013, Stefan Eilemann <eile@eyescale.ch>
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License version 2.1 as published
@@ -37,11 +37,10 @@
 
 namespace GLStats
 {
-static const uint32_t nFrames = 4;
 static const uint32_t space = 2; // pixel
 static const uint32_t gap = space<<1; // pixel
 static const uint32_t barHeight = 10; // pixel
-static const uint32_t rowHeight = barHeight + space;
+static const uint32_t rowHeight = barHeight + gap;
 static const float legendWidth = 80.f; // pixel
 
 typedef std::set< uint32_t > ThreadSet;
@@ -50,8 +49,6 @@ typedef std::map< uint32_t, ThreadSet > EntityMap;
 typedef EntityMap::const_iterator EntityMapCIter;
 typedef stde::hash_map< uint32_t, uint32_t > EntityPos;
 
-typedef std::set< uint32_t > LayerSet;
-typedef LayerSet::const_iterator LayerSetCIter;
 typedef Items::const_iterator ItemsCIter;
 
 namespace detail
@@ -90,7 +87,7 @@ public:
         std::sort( items.begin(), items.end(), _compareItems );
 
         // Scale factor
-        const uint128_t x = data.computeMinMax( nFrames );
+        const uint128_t x = data.computeMinMax();
         const uint64_t totalTime = x.high() - x.low();
         float scale = 1.f;
 
@@ -103,14 +100,10 @@ public:
         // y positions
         EntityMap entities;
         const uint32_t endFrame = items.back().frame;
-        const uint32_t startFrame = endFrame > nFrames ? endFrame - nFrames : 0;
 
         for( ItemsCIter i = items.begin(); i != items.end(); ++i )
         {
             const Item& item = *i;
-            if( item.frame < startFrame )
-                continue;
-
             ThreadSet& threads = entities[ item.entity ];
             threads.insert( item.thread );
         }
@@ -139,11 +132,11 @@ public:
         uint64_t startTime = last->start;
         uint64_t endTime = 0;
 
+        glLogicOp( GL_XOR );
+
         for( ItemsCIter i = items.begin(); i != items.end(); ++i )
         {
             const Item& item = *i;
-            if( item.frame < startFrame )
-                continue;
 
             if( yPos.find( item.entity ) == yPos.end( ))
             {
@@ -165,8 +158,7 @@ public:
                 if( j == endTimes.end( ))
                     endTimes[ last->frame ] = endTime;
                 else
-                    endTimes[ last->frame ] = LB_MAX( endTimes[ last->frame ],
-                                                      endTime );
+                    endTimes[ last->frame ] = LB_MAX( j->second, endTime );
 
                 startTime = item.start;
                 endTime = item.end;
@@ -185,14 +177,15 @@ public:
             const uint64_t row = i->first;
             const uint32_t entity = row >> 32;
             const uint32_t thread = row & 0xFFFFFFFFu;
-            const FrameTimes& times = i->second;
             const ThreadSet& threads = entities[ entity ];
             const ThreadSetCIter threadPos = threads.find( thread );
             const uint32_t y = yPos[ entity ] -
                 std::distance( threads.begin(), threadPos ) * rowHeight;
+            const float y2 = float( y - barHeight - space );
+#if 1
+            // per-frame alternating background color
             const float y1 = float( y + space );
-            const float y2 = float( y - barHeight -space );
-
+            const FrameTimes& times = i->second;
             for( FrameTimesCIter j = times.begin(); j != times.end(); )
             {
                 const uint32_t frame = j->first;
@@ -203,13 +196,13 @@ public:
                 if( end > endTimes[ frame ] )
                     end = endTimes[ frame ];
 
-                const float x1 = float(start - xOffset) / scale - gap;
-                const float x2 = float(end - xOffset) / scale - gap;
+                const float x1 = float(start - xOffset) / scale;
+                const float x2 = float(end - xOffset) / scale;
 
                 if( (endFrame - frame) & 0x1 )
-                    glColor4f( .4f, .4f, .4f, .6f );
+                    glColor4f( .3f, .3f, .3f, .6f );
                 else
-                    glColor4f( .6f, .6f, .6f, .6f );
+                    glColor4f( .7f, .7f, .7f, .6f );
                 glBegin( GL_QUADS ); {
                     glVertex3f( x2, y1, 0.f );
                     glVertex3f( x1, y1, 0.f );
@@ -219,46 +212,29 @@ public:
             }
 
             glEnable( GL_COLOR_LOGIC_OP );
-            if( thread == 0 )
-            {
-                const Entity& entityData = data.getEntity( entity );
-                glColor3f( 1.f, 1.f, 1.f );
-                glRasterPos3f( space, y2, 0.f );
-                api->drawText( entityData.name );
-            }
-            else
-            {
-                const Thread& threadData = data.getThread( thread );
-                glColor3f( 1.f, 1.f, 1.f );
-                glRasterPos3f( space + barHeight, y2, 0.f );
-                api->drawText( threadData.name );
-            }
+            glColor3f( 1.f, 1.f, 1.f );
+            glRasterPos3f( space + barHeight, y2, 0.f );
+            const std::string name = thread ? data.getThread( thread ).name :
+                                              data.getEntity( entity ).name;
+            api->drawText( name );
             glDisable( GL_COLOR_LOGIC_OP );
         }
 
         //----- statistic items
-        uint32_t inset = 0;
-
         last = &items.front();
         for( ItemsCIter i = items.begin(); i != items.end(); ++i )
         {
             const Item& item = *i;
-            if( item.frame < startFrame )
-                continue;
-
-            if( item.frame != last->frame || item.entity != last->entity )
-                inset = 0;
-            else if( item.layer != last->layer )
-                inset += space;
-
             const Type& type = data.getType( item.type );
             const ThreadSet& threads = entities[ item.entity ];
             const ThreadSetCIter j = threads.find( item.thread );
             const uint32_t y = yPos[ item.entity ] -
                 std::distance( threads.begin(), j ) * rowHeight;
 
-            const float x1 = float( item.start - xOffset ) / scale - gap;
-            const float x2 = float( item.end   - xOffset ) / scale - gap;
+            const float x1 = float( item.start - xOffset ) / scale;
+            const float x2 = float( item.end   - xOffset ) / scale;
+
+            const uint32_t inset = item.layer * space;
             const float y1 = float( y - inset );
             const float y2 = float( y - barHeight + inset );
             LBASSERTINFO( y2 < y1, y2 << " >= " << y1 << " (" << y << ")" );
@@ -282,12 +258,21 @@ public:
         glEnable( GL_COLOR_LOGIC_OP );
         glColor4f( 1.f, 1.f, 1.f, 1.f );
 
-        const Strings& text = data.getText();
-        for( StringsCIter i = text.begin(); i != text.end(); ++i )
+        // Additional text, format \n
+        std::string text = data.getText();
+        for( size_t pos = text.find( '\n' ); pos != std::string::npos;
+             pos = text.find( '\n' ))
         {
             nextY -= rowHeight;
             glRasterPos3f( space, static_cast< float >( nextY ), 0.f );
-            api->drawText( *i );
+            api->drawText( text.substr( 0, pos ));
+            text = text.substr( pos + 1 );
+        }
+        if( !text.empty( )) // last line
+        {
+            nextY -= rowHeight;
+            glRasterPos3f( space, static_cast< float >( nextY ), 0.f );
+            api->drawText( text );
         }
 
         std::stringstream stream;
@@ -382,10 +367,6 @@ void Renderer::setViewport( const uint32_t width, const uint32_t height )
 {
     impl_->width = width;
     impl_->height = height;
-}
-
-void Renderer::obsolete( Data& data )
-{
 }
 
 void Renderer::draw( const Data& data )

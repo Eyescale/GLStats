@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2012-2013, Stefan Eilemann <eile@eyescale.ch>
+/* Copyright (c) 2013, Stefan Eilemann <eile@eyescale.ch>
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License version 2.1 as published
@@ -15,29 +15,15 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef GLSTATS_TYPE_H
-#define GLSTATS_TYPE_H
+#ifndef GLSTATS_GLSTATS_H
+#define GLSTATS_GLSTATS_H
 
-#include <GLStats/api.h>
+#include <GLStats/data.h>
+#include <GLStats/entity.h>
+#include <GLStats/item.h>
+#include <GLStats/renderer.h>
+#include <GLStats/thread.h>
+#include <GLStats/type.h>
+#include <GLStats/version.h>
 
-namespace GLStats
-{
-    /** One statistics type. */
-    struct Type
-    {
-        Type()
-        {
-            color[0] = 1.f;
-            color[1] = 1.f;
-            color[2] = 1.f;
-            color[3] = .6f;
-        }
-
-        std::string name;     //!< Description of the event type
-        std::string group;    //!< Name of the entity/group
-        std::string subgroup; //!< Name of the thread/subgroup
-        float color[4];       //!< Base color of the event
-    };
-}
-
-#endif // GLSTATS_TYPE_H
+#endif //GLSTATS_GLSTATS_H

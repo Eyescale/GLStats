@@ -1,15 +1,15 @@
 
-/* Copyright (c) 2012, Stefan Eilemann <eile@eyescale.ch> 
+/* Copyright (c) 2012-2013, Stefan Eilemann <eile@eyescale.ch>
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License version 2.1 as published
  * by the Free Software Foundation.
- *  
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this library; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
@@ -38,22 +38,22 @@ namespace detail { class Data; }
         /** Destruct this data storage. */
         GLSTATS_API virtual ~Data();
 
-        /** Add an entity description. */
-        GLSTATS_API void addEntity( const uint32_t identifier,
+        /** Set an entity description. */
+        GLSTATS_API void setEntity( const uint32_t identifier,
                                     const Entity& entity );
 
         /** @return the entity description for the given id. */
         const Entity& getEntity( const uint32_t identifier ) const;
 
-        /** Add a thread description. */
-        GLSTATS_API void addThread( const uint32_t identifier,
+        /** Set a thread description. */
+        GLSTATS_API void setThread( const uint32_t identifier,
                                     const Thread& thread );
 
         /** @return the thread description for the given id. */
         const Thread& getThread( const uint32_t identifier ) const;
 
-        /** Add an type description. */
-        GLSTATS_API void addType( const uint32_t identifier, const Type& type );
+        /** Set an type description. */
+        GLSTATS_API void setType( const uint32_t identifier, const Type& type );
 
         /** @return the type description for the given id. */
         const Type& getType( const uint32_t identifier ) const;
@@ -67,20 +67,20 @@ namespace detail { class Data; }
         /** @return the vector of items for the frame of the given age. */
         GLSTATS_API const Items& getItems() const;
 
-        /** @return the min and max time for the last n frames. */
-        GLSTATS_API uint128_t computeMinMax( const uint32_t nFrames ) const;
+        /** @return the min and max time of the dataset. */
+        GLSTATS_API uint128_t computeMinMax() const;
 
-        /** Add additional text at the bottom. */
-        GLSTATS_API void addText( const std::string& text );
+        /** Set additional text at the bottom. */
+        GLSTATS_API void setText( const std::string& text );
 
-        /** Remove all additional text. */
-        GLSTATS_API void clearText();
+        /** @return the additional text. */
+        GLSTATS_API const std::string& getText() const;
 
-        /** @return all additional text. */
-        GLSTATS_API const Strings& getText() const;
-
-        /** Obsolete all data older than the given number of frames. */
+        /** Obsolete all items older than the given number of frames. */
         GLSTATS_API void obsolete( const uint32_t nFrames );
+
+        /** Clear all data. */
+        GLSTATS_API void clear();
 
     private:
         detail::Data* const impl_;
