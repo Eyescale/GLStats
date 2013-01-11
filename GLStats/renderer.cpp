@@ -169,8 +169,6 @@ public:
             last = &item;
         }
 
-        glLogicOp( GL_XOR );
-
         for( FrameTimesMapCIter i = frameTimes.begin();
              i != frameTimes.end(); ++i )
         {
@@ -210,7 +208,7 @@ public:
                     glVertex3f( x2, y2, 0.f );
                 } glEnd();
             }
-
+#endif
             glEnable( GL_COLOR_LOGIC_OP );
             glColor3f( 1.f, 1.f, 1.f );
             glRasterPos3f( space + barHeight, y2, 0.f );
