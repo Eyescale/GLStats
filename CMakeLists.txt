@@ -13,7 +13,6 @@ set(VERSION_PATCH "0")
 
 include(Common)
 include(UpdateFile)
-include(InstallSymlink)
 include(FindPackages)
 
 add_subdirectory(GLStats)
@@ -26,3 +25,5 @@ include(DoxygenRule) # must be after all targets
 
 #include(CPackConfig)
 include(CTest)
+
+include(PackageConfig)

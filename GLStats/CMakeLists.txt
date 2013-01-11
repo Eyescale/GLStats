@@ -1,24 +1,19 @@
 
-# Copyright (c) 2012 Stefan Eilemann <eile@eyescale.ch>
+# Copyright (c) 2012-2013 Stefan Eilemann <eile@eyescale.ch>
 
 include(files.cmake)
 source_group(\\ FILES CMakeLists.txt)
 source_group(GLStats FILES ${GLSTATS_PUBLIC_HEADERS} ${GLSTATS_HEADERS}
   ${GLSTATS_SOURCES})
 
-set(LIBRARY GLStats)
-set(LIB_INCLUDE ${LIBRARY})
-
-add_library(${LIBRARY} STATIC ${GLSTATS_ALL})
-target_link_libraries(${LIBRARY} ${GLSTATS_LINKLIB})
-set_target_properties(${LIBRARY}
-  PROPERTIES VERSION ${VERSION} SOVERSION ${VERSION_ABI}
-  COMPILE_DEFINITIONS GLSTATS_SHARED
-)
+add_library(GLStats STATIC ${GLSTATS_ALL})
+target_link_libraries(GLStats ${GLSTATS_LINKLIB})
+set_target_properties(GLStats
+  PROPERTIES VERSION ${VERSION} SOVERSION ${VERSION_ABI})
 
 install(FILES ${GLSTATS_PUBLIC_HEADERS}
-        DESTINATION include/${LIB_INCLUDE} COMPONENT dev)
-install(TARGETS ${LIBRARY}
+        DESTINATION include/GLStats COMPONENT dev)
+install(TARGETS GLStats
         ARCHIVE DESTINATION lib COMPONENT dev
         RUNTIME DESTINATION bin COMPONENT lib
         LIBRARY DESTINATION lib COMPONENT lib)
