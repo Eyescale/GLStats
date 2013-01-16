@@ -13,6 +13,8 @@ set(VERSION_PATCH "0")
 
 include(Common)
 include(UpdateFile)
+
+set(FIND_PACKAGES_DEFINES GLSTATS_STATIC)
 include(FindPackages)
 set(GLSTATS_TRANSIENT_LIBRARIES Lunchbox)
 
