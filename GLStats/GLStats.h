@@ -18,6 +18,7 @@
 #ifndef GLSTATS_GLSTATS_H
 #define GLSTATS_GLSTATS_H
 
+#include <GLStats/api.h>
 #include <GLStats/data.h>
 #include <GLStats/entity.h>
 #include <GLStats/item.h>

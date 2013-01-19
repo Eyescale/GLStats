@@ -1,5 +1,5 @@
  
-/* Copyright (c) 2012, Stefan Eilemann <eile@eyescale.ch> 
+/* Copyright (c) 2010-2012, Stefan Eilemann <eile@eyescale.ch> 
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License version 2.1 as published
@@ -15,19 +15,17 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-/** Defines export visibility macros for GLStats. */
-#ifndef GLSTATS_API_H
-#define GLSTATS_API_H
+#ifndef GLSTATS_DEFINES_H
+#define GLSTATS_DEFINES_H
 
-#include <lunchbox/api.h>
-#include <GLStats/defines.h>
-
-#if defined(GLSTATS_STATIC)
-#  define GLSTATS_API
-#elif defined(GLSTATS_SHARED)
-#  define GLSTATS_API LB_DLLEXPORT
-#else
-#  define GLSTATS_API LB_DLLIMPORT
+#ifdef __APPLE__
+#  include <GLStats/definesDarwin.h>
+#endif
+#ifdef __linux
+#  include <GLStats/definesLinux.h>
+#endif
+#ifdef _WIN32 //_MSC_VER
+#  include <GLStats/definesWin32.h>
 #endif
 
-#endif //GLSTATS_API_H
+#endif // GLSTATS_DEFINES_H
