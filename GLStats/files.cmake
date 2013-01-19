@@ -7,8 +7,10 @@ update_file(${CMAKE_CURRENT_SOURCE_DIR}/version.in.h
 
 set(GLSTATS_PUBLIC_HEADERS
   ${OUTPUT_INCLUDE_DIR}/GLStats/version.h
+  ${DEFINES_FILE}
   api.h
   data.h
+  defines.h
   entity.h
   item.h
   renderer.h
