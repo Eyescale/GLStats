@@ -30,6 +30,8 @@ if(OpenGL_name)
 endif()
 
 
+set(GLSTATS_DEPENDS Lunchbox;OpenGL)
+
 # Write defines.h and options.cmake
 if(NOT FIND_PACKAGES_INCLUDE)
   set(FIND_PACKAGES_INCLUDE

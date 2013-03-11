@@ -16,7 +16,7 @@ include(UpdateFile)
 
 set(FIND_PACKAGES_DEFINES GLSTATS_STATIC)
 include(FindPackages)
-set(GLSTATS_TRANSIENT_LIBRARIES Lunchbox)
+set(GLSTATS_DEPENDENT_LIBRARIES Lunchbox)
 
 add_subdirectory(GLStats)
 #add_subdirectory(tests)
