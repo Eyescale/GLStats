@@ -6,12 +6,13 @@ project(GLStats)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 
-set(RELEASE_VERSION OFF) # OFF or 'Mm0' ABI version
+set(RELEASE_VERSION 100) # OFF or 'Mm0' ABI version
 set(VERSION_MAJOR "0")
 set(VERSION_MINOR "1")
 set(VERSION_PATCH "0")
 
 include(Common)
+include(GitTargets)
 include(UpdateFile)
 
 set(FIND_PACKAGES_DEFINES GLSTATS_STATIC)
@@ -22,11 +23,8 @@ add_subdirectory(GLStats)
 #add_subdirectory(tests)
 
 include(DoxygenRule) # must be after all targets
-
-#install(FILES CMake/FindGLStats.cmake DESTINATION ${CMAKE_MODULE_INSTALL_PATH}
-#  COMPONENT dev)
-
-#include(CPackConfig)
+include(CPackConfig)
+include(GNUModules)
 include(CTest)
 
 include(PackageConfig)
