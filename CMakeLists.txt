@@ -6,9 +6,10 @@ project(GLStats)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 
-set(RELEASE_VERSION 100) # OFF or 'Mm0' ABI version
+set(RELEASE_VERSION OFF) # OFF or 'Mm0' ABI version
+set(LAST_RELEASE 0.1.0)
 set(VERSION_MAJOR "0")
-set(VERSION_MINOR "1")
+set(VERSION_MINOR "3")
 set(VERSION_PATCH "0")
 
 include(Common)
