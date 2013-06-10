@@ -115,6 +115,8 @@ public:
             const ThreadSet& threads = i->second;
             yPos[ i->first ] = nextY;
             nextY -= uint32_t( threads.size() * rowHeight );
+            if( nextY > height ) // overflow
+                nextY = 0;
         }
 
         //----- alternating frame background, entity names
@@ -144,6 +146,8 @@ public:
                               " undeclared, item: " << item );
                 yPos[ item.entity ] = nextY;
                 nextY -= rowHeight;
+                if( nextY > height ) // overflow
+                    nextY = 0;
             }
 
             if( item.entity != last->entity || item.thread != last->thread ||
@@ -228,11 +232,14 @@ public:
             const ThreadSetCIter j = threads.find( item.thread );
             const uint32_t y = yPos[ item.entity ] -
                 std::distance( threads.begin(), j ) * rowHeight;
+            const uint32_t inset = item.layer * space;
+
+            if( y < barHeight + inset ) // window too small
+                continue;
 
             const float x1 = float( item.start - xOffset ) / scale;
             const float x2 = float( item.end   - xOffset ) / scale;
 
-            const uint32_t inset = item.layer * space;
             const float y1 = float( y - inset );
             const float y2 = float( y - barHeight + inset );
             LBASSERTINFO( y2 < y1, y2 << " >= " << y1 << " (" << y << ")" );
