@@ -13,6 +13,6 @@ set(CPACK_DEBIAN_PACKAGE_DEPENDS
   "libstdc++6, libgl1-mesa-glx, ${LUNCHBOX_DEB_DEV_DEPENDENCY}")
 
 set(CPACK_MACPORTS_CATEGORY devel)
-set(CPACK_MACPORTS_DEPENDS boost Lunchbox)
+set(CPACK_MACPORTS_DEPENDS Lunchbox)
 
 include(CommonCPack)
