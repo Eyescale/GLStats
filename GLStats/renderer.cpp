@@ -321,7 +321,7 @@ private:
             {
                 x1 = float( space );
                 nextY -= rowHeight;
-                glColor3f( 0.8f, 0.80f, 0.8f );
+                glColor3f( 0.8f, 0.8f, 0.8f );
                 glRasterPos3f( x1 + rowHeight, nextY - barHeight, 0.f );
                 glEnable( GL_COLOR_LOGIC_OP );
                 api->drawText( type.subgroup );
