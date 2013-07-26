@@ -38,6 +38,7 @@
 namespace GLStats
 {
 static const uint32_t space = 2; // pixel
+static const uint32_t topMargin = 20; //pixel
 static const uint32_t gap = space<<1; // pixel
 static const uint32_t barHeight = 10; // pixel
 static const uint32_t rowHeight = barHeight + gap;
@@ -108,7 +109,7 @@ public:
             threads.insert( item.thread );
         }
 
-        uint32_t nextY = height - gap; // start at top
+        uint32_t nextY = height - gap - topMargin; // start at top
         EntityPos yPos;
         for( EntityMapCIter i = entities.begin(); i != entities.end(); ++i )
         {
@@ -210,7 +211,7 @@ public:
             }
 #endif
             glEnable( GL_COLOR_LOGIC_OP );
-            glColor3f( 1.f, 1.f, 1.f );
+            glColor3f( 0.8f, 0.8f, 0.8f );
             glRasterPos3f( space + barHeight, y2, 0.f );
             const std::string name = thread ? data.getThread( thread ).name :
                                               data.getEntity( entity ).name;
@@ -247,14 +248,14 @@ public:
 
             if( !item.text.empty( ))
             {
-                glColor4f( 1.f, 1.f, 1.f, 1.f );
+                glColor4f( 0.8f, 0.8f, 0.8f, 1.f );
                 glRasterPos3f( x1+1, y2, 0.f );
                 api->drawText( item.text );
             }
         }
 
         glEnable( GL_COLOR_LOGIC_OP );
-        glColor4f( 1.f, 1.f, 1.f, 1.f );
+        glColor4f( 0.8f, 0.8f, 0.8f, 1.f );
 
         // Additional text, format \n
         std::string text = data.getText();
@@ -310,7 +311,7 @@ private:
             {
                 x1 = float( space );
                 nextY -= rowHeight;
-                glColor3f( 1.f, 1.f, 1.f );
+                glColor3f( 0.8f, 0.8f, 0.8f );
                 glRasterPos3f( x1, nextY - barHeight, 0.f );
                 glEnable( GL_COLOR_LOGIC_OP );
                 api->drawText( type.group );
@@ -320,7 +321,7 @@ private:
             {
                 x1 = float( space );
                 nextY -= rowHeight;
-                glColor3f( 1.f, 1.f, 1.f );
+                glColor3f( 0.8f, 0.8f, 0.8f );
                 glRasterPos3f( x1 + rowHeight, nextY - barHeight, 0.f );
                 glEnable( GL_COLOR_LOGIC_OP );
                 api->drawText( type.subgroup );
