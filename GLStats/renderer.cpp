@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2012-2013, Stefan Eilemann <eile@eyescale.ch>
+/* Copyright (c) 2012-2014, Stefan Eilemann <eile@eyescale.ch>
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License version 2.1 as published
@@ -352,7 +352,13 @@ private:
 }
 
 Renderer::Renderer()
-        : impl_( new detail::Renderer )
+    : impl_( new detail::Renderer )
+{
+    impl_->api = this;
+}
+
+Renderer::Renderer( const Renderer& from )
+    : impl_( new detail::Renderer( *from.impl_ ))
 {
     impl_->api = this;
 }
@@ -360,6 +366,16 @@ Renderer::Renderer()
 Renderer::~Renderer()
 {
     delete impl_;
+}
+
+Renderer& Renderer::operator = ( const Renderer& from )
+{
+    if( this == &from )
+        return *this;
+
+    *impl_ = *from.impl_;
+    impl_->api = this;
+    return *this;
 }
 
 void Renderer::setViewport( const uint32_t width, const uint32_t height )
