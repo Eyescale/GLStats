@@ -13,11 +13,15 @@ if(BUILDYARD_STOP)
   return()
 endif()
 
-set(RELEASE_VERSION OFF) # OFF or 'Mm0' ABI version
-set(LAST_RELEASE 0.1.0)
+set(LAST_RELEASE 0.3.0)
 set(VERSION_MAJOR "0")
 set(VERSION_MINOR "3")
 set(VERSION_PATCH "0")
+set(VERSION_ABI 1)
+
+# Tell 'make branch' to name the new branch "VERSION_MAJOR.VERSION_MINOR"
+set(GITTARGETS_RELEASE_BRANCH "minor")
+set(DPUT_HOST "ppa:bbp/ppa") # Target ppa used by 'make dput'
 
 include(Common)
 include(GitTargets)
