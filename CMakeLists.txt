@@ -6,7 +6,7 @@ project(GLStats)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake
   ${CMAKE_SOURCE_DIR}/CMake/common)
-include(.gitexternals)
+include(GitExternal)
 
 include(Buildyard)
 if(BUILDYARD_STOP)
@@ -22,6 +22,8 @@ set(VERSION_ABI 1)
 # Tell 'make branch' to name the new branch "VERSION_MAJOR.VERSION_MINOR"
 set(GITTARGETS_RELEASE_BRANCH "minor")
 set(DPUT_HOST "ppa:bbp/ppa") # Target ppa used by 'make dput'
+
+set(PROJECT_INCLUDE_NAME "GLStats")
 
 include(Common)
 include(GitTargets)
