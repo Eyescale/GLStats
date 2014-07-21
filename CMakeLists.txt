@@ -17,7 +17,7 @@ set(LAST_RELEASE 0.3.0)
 set(VERSION_MAJOR "0")
 set(VERSION_MINOR "3")
 set(VERSION_PATCH "0")
-set(VERSION_ABI 1)
+set(VERSION_ABI 101)
 
 # Tell 'make branch' to name the new branch "VERSION_MAJOR.VERSION_MINOR"
 set(GITTARGETS_RELEASE_BRANCH "minor")
