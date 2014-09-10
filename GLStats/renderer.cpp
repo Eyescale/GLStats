@@ -235,7 +235,7 @@ public:
 
             const uint32_t inset = item.layer * space;
             const float y1 = float( y - inset );
-            const float y2 = float( y - barHeight + inset );
+            const float y2 = float( y + inset ) - float( barHeight ); // Fix #9
             LBASSERTINFO( y2 < y1, y2 << " >= " << y1 << " (" << y << ")" );
 
             glColor4fv( type.color );
