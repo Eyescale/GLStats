@@ -4,8 +4,8 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(GLStats)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake
-  ${CMAKE_SOURCE_DIR}/CMake/common)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake
+  ${PROJECT_SOURCE_DIR}/CMake/common)
 include(GitExternal)
 
 include(Buildyard)
@@ -34,8 +34,7 @@ include(FindPackages)
 set(GLSTATS_DEPENDENT_LIBRARIES Lunchbox)
 
 add_subdirectory(GLStats)
-
-add_subdirectory(tests)
+#add_subdirectory(tests)
 
 include(DoxygenRule) # must be after all targets
 include(CPackConfig)

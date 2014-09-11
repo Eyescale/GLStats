@@ -5,7 +5,6 @@
 
 include(InstallFiles)
 
-include_directories(${CMAKE_SOURCE_DIR}) # some tests need private headers
 set(TEST_LIBRARIES Lunchbox ${Boost_LIBRARIES})
 include(CommonCTest)
 
