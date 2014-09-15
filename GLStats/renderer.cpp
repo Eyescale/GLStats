@@ -48,7 +48,7 @@ typedef std::set< uint32_t > ThreadSet;
 typedef ThreadSet::const_iterator ThreadSetCIter;
 typedef std::map< uint32_t, ThreadSet > EntityMap;
 typedef EntityMap::const_iterator EntityMapCIter;
-typedef stde::hash_map< uint32_t, uint32_t > EntityPos;
+typedef stde::hash_map< uint32_t, float > EntityPos;
 
 typedef Items::const_iterator ItemsCIter;
 
@@ -109,13 +109,13 @@ public:
             threads.insert( item.thread );
         }
 
-        uint32_t nextY = height - gap - topMargin; // start at top
+        float nextY = float(height) - float( gap + topMargin ); // start at top
         EntityPos yPos;
         for( EntityMapCIter i = entities.begin(); i != entities.end(); ++i )
         {
             const ThreadSet& threads = i->second;
             yPos[ i->first ] = nextY;
-            nextY -= uint32_t( threads.size() * rowHeight );
+            nextY -= float( threads.size() * rowHeight );
         }
 
         //----- alternating frame background, entity names
@@ -144,7 +144,7 @@ public:
                 LBASSERTINFO( false, "Entity " << item.entity <<
                               " undeclared, item: " << item );
                 yPos[ item.entity ] = nextY;
-                nextY -= rowHeight;
+                nextY -= float( rowHeight );
             }
 
             if( item.entity != last->entity || item.thread != last->thread ||
@@ -178,9 +178,9 @@ public:
             const uint32_t thread = row & 0xFFFFFFFFu;
             const ThreadSet& threads = entities[ entity ];
             const ThreadSetCIter threadPos = threads.find( thread );
-            const uint32_t y = yPos[ entity ] -
-                std::distance( threads.begin(), threadPos ) * rowHeight;
-            const float y2 = float( y - barHeight - space );
+            const float y = yPos[ entity ] -
+                float( std::distance( threads.begin(), threadPos ) * rowHeight );
+            const float y2 = y - float( barHeight + space );
 #if 1
             // per-frame alternating background color
             const float y1 = float( y + space );
@@ -227,15 +227,15 @@ public:
             const Type& type = data.getType( item.type );
             const ThreadSet& threads = entities[ item.entity ];
             const ThreadSetCIter j = threads.find( item.thread );
-            const uint32_t y = yPos[ item.entity ] -
-                std::distance( threads.begin(), j ) * rowHeight;
+            const float y = yPos[ item.entity ] -
+                float(std::distance( threads.begin(), j ) * rowHeight);
 
             const float x1 = float( item.start - xOffset ) / scale;
             const float x2 = float( item.end   - xOffset ) / scale;
 
             const uint32_t inset = item.layer * space;
-            const float y1 = float( y - inset );
-            const float y2 = float( y + inset ) - float( barHeight ); // Fix #9
+            const float y1 = float( y ) - float( inset );
+            const float y2 = float( y + inset ) - float( barHeight );
             LBASSERTINFO( y2 < y1, y2 << " >= " << y1 << " (" << y << ")" );
 
             glColor4fv( type.color );
