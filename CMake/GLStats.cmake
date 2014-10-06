@@ -1,5 +1,6 @@
 
 
+
 set(GLSTATS_PACKAGE_VERSION 0.3)
 set(GLSTATS_REPO_URL https://github.com/Eyescale/GLStats.git)
 set(GLSTATS_REPO_TAG master)
@@ -7,6 +8,13 @@ set(GLSTATS_DEPENDS REQUIRED Lunchbox OpenGL)
 set(GLSTATS_DEB_DEPENDS libx11-dev libgl1-mesa-dev)
 set(GLSTATS_FORCE_BUILD ${CI_BUILD})
 
+if(CI_BUILD_COMMIT)
+  set(GLSTATS_REPO_TAG ${CI_BUILD_COMMIT})
+else()
+  set(GLSTATS_REPO_TAG master)
+endif()
+set(GLSTATS_FORCE_BUILD ON)
+set(GLSTATS_SOURCE ${CMAKE_SOURCE_DIR})
 if(CI_BUILD_COMMIT)
   set(GLSTATS_REPO_TAG ${CI_BUILD_COMMIT})
 else()
