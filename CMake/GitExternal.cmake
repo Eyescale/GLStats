@@ -177,7 +177,7 @@ execute_process(
   OUTPUT_VARIABLE newref OUTPUT_STRIP_TRAILING_WHITESPACE
   WORKING_DIRECTORY ${DIR})
 if(newref)
-  file(APPEND ${GIT_EXTERNALS} \"# ${DIR} ${REPO} \${newref}\\n\")
+  file(APPEND ${GIT_EXTERNALS} \"# ${DIR} ${REPO} \${newref}\")
   git_external(${DIR} ${REPO} \${newref})
 else()
   file(APPEND ${GIT_EXTERNALS} \"# ${DIR} ${REPO} ${TAG}\n\")
