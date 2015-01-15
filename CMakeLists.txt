@@ -25,7 +25,7 @@ include(FindPackages)
 set(GLSTATS_DEPENDENT_LIBRARIES Lunchbox)
 
 add_subdirectory(GLStats)
-add_subdirectory(tests)
+#add_subdirectory(tests)
 
 include(CPackConfig)
 include(DoxygenRule) # must be after all targets

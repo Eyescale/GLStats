@@ -14,18 +14,19 @@ find_package(PkgConfig)
 set(ENV{PKG_CONFIG_PATH}
   "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
 
-set(ENV{PKG_CONFIG_PATH} "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
-if(PKG_CONFIG_EXECUTABLE)
-  find_package(Lunchbox 1.10)
-  if((NOT Lunchbox_FOUND) AND (NOT LUNCHBOX_FOUND))
-    pkg_check_modules(Lunchbox Lunchbox>=1.10)
+macro(COMMON_PACKAGE Name)
+  string(TOUPPER ${Name} COMMON_PACKAGE_NAME)
+  set(COMMON_PACKAGE_ARGS ${ARGN}) # ARGN is not a list. make one.
+  set(COMMON_PACKAGE_VERSION)
+
+  if(COMMON_PACKAGE_ARGS)
+    list(GET COMMON_PACKAGE_ARGS 0 COMMON_PACKAGE_VERSION)
+    if(COMMON_PACKAGE_VERSION MATCHES "^[0-9.]+$") # is a version
+      set(COMMON_PACKAGE_VERSION ">=${COMMON_PACKAGE_VERSION}")
+    else()
+      set(COMMON_PACKAGE_VERSION)
+    endif()
   endif()
-  if((NOT Lunchbox_FOUND) AND (NOT LUNCHBOX_FOUND))
-    message(FATAL_ERROR "Could not find Lunchbox")
-  endif()
-else()
-  find_package(Lunchbox 1.10  REQUIRED)
-endif()
 
   list(FIND COMMON_PACKAGE_ARGS "QUIET" COMMON_PACKAGE_QUIET_POS)
   if(COMMON_PACKAGE_QUIET_POS EQUAL -1)
@@ -96,7 +97,7 @@ if(OpenGL_name)
   endif()
 endif()
 
-set(GLSTATS_BUILD_DEBS autoconf;automake;avahi-daemon;cmake;doxygen;git;git-review;libavahi-client-dev;libboost-filesystem-dev;libboost-regex-dev;libboost-serialization-dev;libboost-system-dev;libboost-thread-dev;libgl1-mesa-dev;libhwloc-dev;libjpeg-turbo8-dev;libleveldb-dev;libturbojpeg;libx11-dev;pkg-config;subversion)
+set(GLSTATS_BUILD_DEBS autoconf;automake;avahi-daemon;cmake;doxygen;git;git-review;libavahi-client-dev;libboost-filesystem-dev;libboost-regex-dev;libboost-serialization-dev;libboost-system-dev;libboost-test-dev;libboost-thread-dev;libgl1-mesa-dev;libhwloc-dev;libleveldb-dev;libopenmpi-dev;libx11-dev;openmpi-bin;pkg-config;subversion)
 
 set(GLSTATS_DEPENDS Lunchbox;OpenGL)
 
