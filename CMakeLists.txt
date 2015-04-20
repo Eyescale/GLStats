@@ -15,7 +15,6 @@ set(VERSION_PATCH "1")
 set(VERSION_ABI 1)
 
 set(DPUT_HOST "ppa:bbp/ppa") # Target ppa used by 'make dput'
-
 set(PROJECT_INCLUDE_NAME "GLStats")
 
 include(Common)
