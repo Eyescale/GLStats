@@ -220,7 +220,6 @@ public:
         }
 
         //----- statistic items
-        last = &items.front();
         for( ItemsCIter i = items.begin(); i != items.end(); ++i )
         {
             const Item& item = *i;
