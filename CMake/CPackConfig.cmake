@@ -4,6 +4,7 @@
 set(CPACK_PACKAGE_VENDOR "www.eyescale.ch")
 set(CPACK_PACKAGE_CONTACT "Raphael Dumusc <raphael.dumusc@epfl.ch>")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenGL overlay statistics renderer")
+set(CPACK_PACKAGE_LICENSE "LGPL")
 #set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/doc/RelNotes.md)
 #set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/doc/RelNotes.md)
 
