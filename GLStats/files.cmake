@@ -2,7 +2,6 @@
 # Copyright (c) 2012-2013 Stefan Eilemann <eile@eyescale.ch>
 
 set(GLSTATS_PUBLIC_HEADERS
-  ${COMMON_INCLUDES} 
   data.h
   entity.h
   item.h
@@ -13,7 +12,6 @@ set(GLSTATS_PUBLIC_HEADERS
   )
 
 set(GLSTATS_SOURCES
-  ${COMMON_SOURCES}
   data.cpp
   renderer.cpp
   )

@@ -14,13 +14,19 @@ set(VERSION_MINOR "3")
 set(VERSION_PATCH "2")
 set(VERSION_ABI 1)
 
-set(PROJECT_INCLUDE_NAME "GLStats")
+set(COMMON_PROJECT_DOMAIN ch.eyescale)
+set(DPUT_HOST "ppa:bbp/ppa") # Target ppa used by 'make dput'
+set(GLSTATS_INCLUDE_NAME GLStats)
 
 include(Common)
 
 set(DPUT_HOST "ppa:bbp/ppa") # Target ppa used by 'make dput'
-set(FIND_PACKAGES_DEFINES GLSTATS_STATIC)
-include(FindPackages)
+set(COMMON_PACKAGE_DEFINES GLSTATS_STATIC)
+
+common_package(Lunchbox REQUIRED)
+common_package(OpenGL REQUIRED)
+common_package_post()
+
 set(GLSTATS_DEPENDENT_LIBRARIES Lunchbox)
 
 add_subdirectory(GLStats)
