@@ -11,14 +11,14 @@ include(SubProject)
 
 set(VERSION_MAJOR "0")
 set(VERSION_MINOR "3")
-set(VERSION_PATCH "1")
+set(VERSION_PATCH "2")
 set(VERSION_ABI 1)
 
-set(DPUT_HOST "ppa:bbp/ppa") # Target ppa used by 'make dput'
 set(PROJECT_INCLUDE_NAME "GLStats")
 
 include(Common)
 
+set(DPUT_HOST "ppa:bbp/ppa") # Target ppa used by 'make dput'
 set(FIND_PACKAGES_DEFINES GLSTATS_STATIC)
 include(FindPackages)
 set(GLSTATS_DEPENDENT_LIBRARIES Lunchbox)
@@ -26,5 +26,7 @@ set(GLSTATS_DEPENDENT_LIBRARIES Lunchbox)
 add_subdirectory(GLStats)
 #add_subdirectory(tests)
 
+set(DOXYGEN_MAINPAGE_MD ${PROJECT_SOURCE_DIR}/README.md)
+set(DOXYGEN_EXTRA_INPUT ${DOXYGEN_MAINPAGE_MD})
 include(CPackConfig)
 include(DoxygenRule) # must be after all targets
