@@ -8,6 +8,4 @@ list(APPEND GLSTATS_LINK_LIBRARIES ${Boost_PROGRAM_OPTIONS_LIBRARY})
 set(GLSTATS_LIBRARY_TYPE STATIC)
 common_library(GLStats)
 
-# Grouping files in VisualStudio
-source_group(\\ FILES CMakeLists.txt)
 
