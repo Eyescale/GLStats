@@ -33,7 +33,7 @@ public:
     GLSTATS_API Renderer();
 
     /** Copy-construct a new renderer. */
-    GLSTATS_API Renderer( const Renderer& from );
+    GLSTATS_API explicit Renderer( const Renderer& from );
 
     /** Destruct this renderer. */
     GLSTATS_API virtual ~Renderer();
