@@ -5,7 +5,7 @@
 
 include(InstallFiles)
 
-set(TEST_LIBRARIES Lunchbox ${Boost_LIBRARIES})
+set(TEST_LIBRARIES Lunchbox)
 include(CommonCTest)
 
 install_files(share/Lunchbox/tests FILES ${TEST_FILES} COMPONENT examples)
