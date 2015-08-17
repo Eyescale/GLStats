@@ -3,7 +3,7 @@
 
 include(files.cmake)
 
-list(APPEND GLSTATS_LINK_LIBRARIES ${Boost_PROGRAM_OPTIONS_LIBRARY})
+list(APPEND GLSTATS_LINK_LIBRARIES PUBLIC Lunchbox)
 
 set(GLSTATS_LIBRARY_TYPE STATIC)
 common_library(GLStats)
