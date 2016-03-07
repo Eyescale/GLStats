@@ -11,7 +11,7 @@ include(SubProject)
 
 set(VERSION_MAJOR "0")
 set(VERSION_MINOR "3")
-set(VERSION_PATCH "2")
+set(VERSION_PATCH "3")
 set(VERSION_ABI 1)
 
 set(COMMON_PROJECT_DOMAIN ch.eyescale)
