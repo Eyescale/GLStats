@@ -3,9 +3,8 @@
 #
 # Change this number when adding tests to force a CMake run: 1
 
-include(InstallFiles)
-
-set(TEST_LIBRARIES Lunchbox)
-include(CommonCTest)
-
-install_files(share/Lunchbox/tests FILES ${TEST_FILES} COMPONENT examples)
+if(NOT TARGET ${PROJECT_NAME}-tests)
+  add_custom_target(${PROJECT_NAME}-tests)
+  set_target_properties(${PROJECT_NAME}-tests PROPERTIES
+    EXCLUDE_FROM_DEFAULT_BUILD ON FOLDER ${PROJECT_NAME}/tests)
+endif()
