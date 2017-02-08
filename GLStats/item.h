@@ -23,28 +23,35 @@
 
 namespace GLStats
 {
-    /** One statistics item. */
-    struct Item
+/** One statistics item. */
+struct Item
+{
+    Item()
+        : start(-1)
+        , end(-1)
+        , type(0)
+        , entity(0)
+        , thread(0)
+        , frame(0)
+        , layer(0)
     {
-        Item() : start( -1 ), end( -1 ), type( 0 ), entity( 0 ), thread( 0 )
-               , frame( 0 ), layer( 0 )
-            {}
-
-        uint64_t start;   //!< Beginning of the event
-        uint64_t end;     //!< End of the event
-        uint32_t type;    //!< Event type
-        uint32_t entity;  //!< Identifier of the reporting entity
-        uint32_t thread;  //!< Identifier of the reporting thread
-        uint32_t frame;   //!< The rendering frame number
-        uint32_t layer;   //!< Depth of a (sub-)event
-        std::string text; //!< Optional string at the end of the item
-    };
-
-    inline std::ostream& operator << ( std::ostream& os, const Item& item )
-    {
-        return os << item.entity << '.' << item.thread << "@ " << item.frame
-                  << "(" << item.start << '-' << item.end << "):" << item.type ;
     }
+
+    uint64_t start;   //!< Beginning of the event
+    uint64_t end;     //!< End of the event
+    uint32_t type;    //!< Event type
+    uint32_t entity;  //!< Identifier of the reporting entity
+    uint32_t thread;  //!< Identifier of the reporting thread
+    uint32_t frame;   //!< The rendering frame number
+    uint32_t layer;   //!< Depth of a (sub-)event
+    std::string text; //!< Optional string at the end of the item
+};
+
+inline std::ostream& operator<<(std::ostream& os, const Item& item)
+{
+    return os << item.entity << '.' << item.thread << "@ " << item.frame << "("
+              << item.start << '-' << item.end << "):" << item.type;
+}
 }
 
-#endif //GLSTATS_ITEM_H
+#endif // GLSTATS_ITEM_H
