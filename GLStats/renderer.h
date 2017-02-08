@@ -23,7 +23,10 @@
 
 namespace GLStats
 {
-namespace detail { class Renderer; }
+namespace detail
+{
+class Renderer;
+}
 
 /** The default renderer. */
 class Renderer
@@ -33,16 +36,16 @@ public:
     GLSTATS_API Renderer();
 
     /** Copy-construct a new renderer. */
-    GLSTATS_API explicit Renderer( const Renderer& from );
+    GLSTATS_API explicit Renderer(const Renderer& from);
 
     /** Destruct this renderer. */
     GLSTATS_API virtual ~Renderer();
 
     /** Assign the settings from another renderer. */
-    GLSTATS_API Renderer& operator = ( const Renderer& from );
+    GLSTATS_API Renderer& operator=(const Renderer& from);
 
     /** Set the size of the rendering area in pixels. */
-    GLSTATS_API void setViewport( const uint32_t width, const uint32_t height );
+    GLSTATS_API void setViewport(const uint32_t width, const uint32_t height);
 
     /**
      * Render the data set.
@@ -50,10 +53,10 @@ public:
      * The OpenGL state has to be set up to ...
      * @param data the statistics data
      */
-    GLSTATS_API void draw( const Data& data );
+    GLSTATS_API void draw(const Data& data);
 
 protected:
-    virtual void drawText( const std::string& text ) = 0;
+    virtual void drawText(const std::string& text) = 0;
 
 private:
     detail::Renderer* const impl_;
@@ -61,4 +64,4 @@ private:
 };
 }
 
-#endif //GLSTATS_RENDERER_H
+#endif // GLSTATS_RENDERER_H

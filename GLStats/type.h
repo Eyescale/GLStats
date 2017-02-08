@@ -22,22 +22,22 @@
 
 namespace GLStats
 {
-    /** One statistics type. */
-    struct Type
+/** One statistics type. */
+struct Type
+{
+    Type()
     {
-        Type()
-        {
-            color[0] = 1.f;
-            color[1] = 1.f;
-            color[2] = 1.f;
-            color[3] = .6f;
-        }
+        color[0] = 1.f;
+        color[1] = 1.f;
+        color[2] = 1.f;
+        color[3] = .6f;
+    }
 
-        std::string name;     //!< Description of the event type
-        std::string group;    //!< Name of the entity/group
-        std::string subgroup; //!< Name of the thread/subgroup
-        float color[4];       //!< Base color of the event
-    };
+    std::string name;     //!< Description of the event type
+    std::string group;    //!< Name of the entity/group
+    std::string subgroup; //!< Name of the thread/subgroup
+    float color[4];       //!< Base color of the event
+};
 }
 
 #endif // GLSTATS_TYPE_H

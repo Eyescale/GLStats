@@ -22,15 +22,15 @@
 #include "thread.h"
 #include "type.h"
 
+#include <limits>
 #include <lunchbox/debug.h>
 #include <lunchbox/stdExt.h>
-#include <limits>
 
 namespace GLStats
 {
-typedef stde::hash_map< uint32_t, Entity > EntityMap;
+typedef stde::hash_map<uint32_t, Entity> EntityMap;
 typedef EntityMap::const_iterator EntityMapCIter;
-typedef stde::hash_map< uint32_t, Thread > ThreadMap;
+typedef stde::hash_map<uint32_t, Thread> ThreadMap;
 typedef ThreadMap::const_iterator ThreadMapCIter;
 typedef Items::const_iterator ItemsCIter;
 typedef Items::iterator ItemsIter;
@@ -47,35 +47,35 @@ public:
     uint128_t computeMinMax() const
     {
         uint64_t xMax = 0;
-        uint64_t xMin = std::numeric_limits< uint64_t >::max();
+        uint64_t xMin = std::numeric_limits<uint64_t>::max();
 
-        for( ItemsCIter i = items.begin(); i != items.end(); ++i )
+        for (ItemsCIter i = items.begin(); i != items.end(); ++i)
         {
             const Item& item = *i;
-            xMin = LB_MIN( xMin, item.start );
-            xMax = LB_MAX( xMax, item.end );
+            xMin = LB_MIN(xMin, item.start);
+            xMax = LB_MAX(xMax, item.end);
         }
-        return uint128_t( xMax, xMin );
+        return uint128_t(xMax, xMin);
     }
 
-    void obsolete( const uint32_t nFrames )
+    void obsolete(const uint32_t nFrames)
     {
-        if( items.empty( ))
+        if (items.empty())
             return;
 
         uint32_t startFrame = 0;
-        for( ItemsCIter i = items.begin(); i != items.end(); ++i )
-            if( (*i).frame > startFrame )
+        for (ItemsCIter i = items.begin(); i != items.end(); ++i)
+            if ((*i).frame > startFrame)
                 startFrame = (*i).frame;
 
         startFrame = startFrame > nFrames ? startFrame - nFrames : 0;
-        if( startFrame == 0 )
+        if (startFrame == 0)
             return;
 
-        for( ItemsIter i = items.begin(); i != items.end(); )
+        for (ItemsIter i = items.begin(); i != items.end();)
         {
-            if( (*i).frame < startFrame )
-                i = items.erase( i );
+            if ((*i).frame < startFrame)
+                i = items.erase(i);
             else
                 ++i;
         }
@@ -90,53 +90,55 @@ public:
 }
 
 Data::Data()
-        : impl_( new detail::Data )
-{}
+    : impl_(new detail::Data)
+{
+}
 
-Data::Data( const Data& from )
-        : impl_( new detail::Data( *from.impl_ ))
-{}
+Data::Data(const Data& from)
+    : impl_(new detail::Data(*from.impl_))
+{
+}
 
 Data::~Data()
 {
     delete impl_;
 }
 
-void Data::setEntity( const uint32_t identifier, const Entity& entity )
+void Data::setEntity(const uint32_t identifier, const Entity& entity)
 {
-    impl_->entities[ identifier ] = entity;
+    impl_->entities[identifier] = entity;
 }
 
-const Entity& Data::getEntity( const uint32_t identifier ) const
+const Entity& Data::getEntity(const uint32_t identifier) const
 {
-    const EntityMapCIter i = impl_->entities.find( identifier );
-    if( i == impl_->entities.end( ))
+    const EntityMapCIter i = impl_->entities.find(identifier);
+    if (i == impl_->entities.end())
         return detail::nullEntity_;
     return i->second;
 }
 
-void Data::setThread( const uint32_t identifier, const Thread& thread )
+void Data::setThread(const uint32_t identifier, const Thread& thread)
 {
-    impl_->threads[ identifier ] = thread;
+    impl_->threads[identifier] = thread;
 }
 
-const Thread& Data::getThread( const uint32_t identifier ) const
+const Thread& Data::getThread(const uint32_t identifier) const
 {
-    const ThreadMapCIter i = impl_->threads.find( identifier );
-    if( i == impl_->threads.end( ))
+    const ThreadMapCIter i = impl_->threads.find(identifier);
+    if (i == impl_->threads.end())
         return detail::nullThread_;
     return i->second;
 }
 
-void Data::setType( const uint32_t identifier, const Type& type )
+void Data::setType(const uint32_t identifier, const Type& type)
 {
-    impl_->types[ identifier ] = type;
+    impl_->types[identifier] = type;
 }
 
-const Type& Data::getType( const uint32_t identifier ) const
+const Type& Data::getType(const uint32_t identifier) const
 {
-    const TypeMapCIter i = impl_->types.find( identifier );
-    if( i == impl_->types.end( ))
+    const TypeMapCIter i = impl_->types.find(identifier);
+    if (i == impl_->types.end())
         return detail::nullType_;
     return i->second;
 }
@@ -146,10 +148,10 @@ const TypeMap& Data::getTypes() const
     return impl_->types;
 }
 
-void Data::addItem( const Item& item )
+void Data::addItem(const Item& item)
 {
-    LBASSERTINFO( item.start <= item.end, item );
-    impl_->items.push_back( item );
+    LBASSERTINFO(item.start <= item.end, item);
+    impl_->items.push_back(item);
 }
 
 const Items& Data::getItems() const
@@ -162,7 +164,7 @@ uint128_t Data::computeMinMax() const
     return impl_->computeMinMax();
 }
 
-void Data::setText( const std::string& text )
+void Data::setText(const std::string& text)
 {
     impl_->text = text;
 }
@@ -172,9 +174,9 @@ const std::string& Data::getText() const
     return impl_->text;
 }
 
-void Data::obsolete( const uint32_t nFrames )
+void Data::obsolete(const uint32_t nFrames)
 {
-    impl_->obsolete( nFrames );
+    impl_->obsolete(nFrames);
 }
 
 void Data::clear()
@@ -185,5 +187,4 @@ void Data::clear()
     impl_->items.clear();
     impl_->text.clear();
 }
-
 }
