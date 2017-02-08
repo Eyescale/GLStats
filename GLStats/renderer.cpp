@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2012-2014, Stefan Eilemann <eile@eyescale.ch>
+/* Copyright (c) 2012-2017, Stefan Eilemann <eile@eyescale.ch>
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License version 2.1 as published
@@ -25,10 +25,12 @@
 
 #include <lunchbox/debug.h>
 #include <lunchbox/os.h>
-#include <lunchbox/stdExt.h>
+#include <servus/uint128_t.h>
 
+#include <algorithm>
 #include <map>
 #include <set>
+#include <unordered_map>
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #else
@@ -48,7 +50,7 @@ typedef std::set<uint32_t> ThreadSet;
 typedef ThreadSet::const_iterator ThreadSetCIter;
 typedef std::map<uint32_t, ThreadSet> EntityMap;
 typedef EntityMap::const_iterator EntityMapCIter;
-typedef stde::hash_map<uint32_t, float> EntityPos;
+typedef std::unordered_map<uint32_t, float> EntityPos;
 
 typedef Items::const_iterator ItemsCIter;
 
@@ -127,8 +129,8 @@ public:
         const Item* last = &items.front();
         typedef std::pair<uint32_t, uint64_t> FrameTime;
         typedef std::vector<FrameTime> FrameTimes;
-        typedef stde::hash_map<uint64_t, FrameTimes> FrameTimesMap;
-        typedef stde::hash_map<uint32_t, uint64_t> FrameEndMap;
+        typedef std::unordered_map<uint64_t, FrameTimes> FrameTimesMap;
+        typedef std::unordered_map<uint32_t, uint64_t> FrameEndMap;
         typedef FrameTimes::const_iterator FrameTimesCIter;
         typedef FrameTimesMap::const_iterator FrameTimesMapCIter;
         typedef FrameEndMap::const_iterator FrameEndMapCIter;
@@ -146,8 +148,9 @@ public:
 
             if (yPos.find(item.entity) == yPos.end())
             {
-                LBASSERTINFO(false, "Entity " << item.entity
-                                              << " undeclared, item: " << item);
+                LBASSERTINFO(false,
+                             "Entity " << item.entity
+                                       << " undeclared, item: " << item);
                 yPos[item.entity] = nextY;
                 nextY -= float(rowHeight);
             }

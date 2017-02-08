@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2012-2013, Stefan Eilemann <eile@eyescale.ch>
+/* Copyright (c) 2012-2017, Stefan Eilemann <eile@eyescale.ch>
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License version 2.1 as published
@@ -22,15 +22,17 @@
 #include "thread.h"
 #include "type.h"
 
-#include <limits>
 #include <lunchbox/debug.h>
-#include <lunchbox/stdExt.h>
+#include <servus/uint128_t.h>
+
+#include <limits>
+#include <unordered_map>
 
 namespace GLStats
 {
-typedef stde::hash_map<uint32_t, Entity> EntityMap;
+typedef std::unordered_map<uint32_t, Entity> EntityMap;
 typedef EntityMap::const_iterator EntityMapCIter;
-typedef stde::hash_map<uint32_t, Thread> ThreadMap;
+typedef std::unordered_map<uint32_t, Thread> ThreadMap;
 typedef ThreadMap::const_iterator ThreadMapCIter;
 typedef Items::const_iterator ItemsCIter;
 typedef Items::iterator ItemsIter;
