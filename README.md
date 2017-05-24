@@ -17,8 +17,8 @@ tested:
 
 Building from source is as simple as:
 
-    git clone https://github.com/Eyescale/GLStats.git
+    git clone --recursive https://github.com/Eyescale/GLStats.git
     mkdir GLStats/build
     cd GLStats/build
-    cmake -GNinja ..
+    cmake -GNinja .. -DCLONE_SUBPROJECTS=ON
     ninja
