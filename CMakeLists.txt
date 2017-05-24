@@ -6,8 +6,10 @@ project(GLStats VERSION 0.3.3)
 set(GLStats_VERSION_ABI 1)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/CMake
-  ${CMAKE_SOURCE_DIR}/CMake/common)
-include(GitExternal)
+                              ${CMAKE_SOURCE_DIR}/CMake/common)
+if(NOT EXISTS ${CMAKE_SOURCE_DIR}/CMake/common/Common.cmake)
+  message(FATAL_ERROR "CMake/common missing, run: git submodule update --init")
+endif()
 
 set(DPUT_HOST "ppa:bbp/ppa") # Target ppa used by 'make dput'
 set(GLSTATS_INCLUDE_NAME GLStats)
